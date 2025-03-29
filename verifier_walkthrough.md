@@ -196,7 +196,22 @@ $deep = f_{setup_0} + \alpha*f_{setup_1} + ... \alpha^5*f_{witness_0} + ..$
 
 This polynomial also includes the quotient polynomial.
 
-This way, if we can prove that this $deep$ is the actual polynomial of a fixed degree AND we'll also check that all the evaluations in point $z$ are also correct.
+This way, if we can prove that this $deep$ is the actual polynomial of a fixed degree.
+
+
+### Checking the value at z
+But how to check that values at $z$ were calculated correctly ?
+
+To do this, we'll do a small trick -- we'll use FRI to verify a DIFFERENT polynomial
+
+$deep_{fri}(x) = (deep(z) - deep(x)) / (z - x)$. 
+
+If the $deep(z)$ that we compute based off `eval_at_z` elements from the proof is correct, then when $x = z$ the delta will be 0 - therefore the polynomial should be divisible by $(x-z)$. 
+
+So if we prove that $deep_fri(x)$ is a polynomial, then $deep(z)$ was correctly computed AND $deep(x)$ is a polynomial, so all the other column functions are polynomials too, and the quotient is also a polynomial and everything works.
+
+
+### Precomputations
 
 We'll start with some precomputations:
 
@@ -273,7 +288,9 @@ Let's do a quick summary of all the steps that we did in the verifier:
 * loaded proof & queries
 * based on proof - computed necessary seeds and random parameters (alpha, beta, query indexes)
 * we got the values of all the polynomials in random point $z$ - and checked - using evaluate_quotient - that the quotient polynomial at that point matches the computations
-* then we combined all these polynomials together - and using FRI queries - we have both proven that they are an actual polynomial of some degree - AND - that their evaluations at point $z$ were correct.
+* then we combined all these polynomials together (into deep polynomial)
+* we created the deep-fri polynomial (by adding the check that deep polynomial evaluation at $z$ divides $(x-z)$)
+* and finally, using FRI, we have proven that deep fri is an an actual polynomial of some degree.
 
 
 Therefore - prover did possess such a trace table, where all the constraints were met (that is that the contributions to the quotient polynomial were actually 0 in the places where divisors required them).
