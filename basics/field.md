@@ -73,3 +73,42 @@ pub const TWO_ADIC_GENERATOR: Self = Self {
     c1: Mersenne31Field::new(1584694829),
 };
 ```
+
+## Why multiplicative groups
+
+There are reasons why we decided to do operations in such groups, rather than directly on the elements of the field.
+
+The main reason, is the fact that we have to keep computing "vanishing polynomial". (see [Basic polynomials](polynomials.md) for more info).
+
+Imagine that you have to compute the polynomial that looks like this:
+
+$(x-a_0) * (x-a_1) * (x-a_2) * ... * (x-a_{8388607})$
+
+This would result in a very large polynomial with lot of coefficients.
+
+But here's where the multiplicative groups help.
+
+Let's start with a simple example: 
+
+16 is a generator of a group of size 2 in field modulo 17.
+
+```
+16^1 = 16
+16^2 = 1
+```
+
+Let's compute:
+
+$(x-16) * (x-1) = x^2 - (16+1)x +16 = x^2 - 1$
+
+As you can see - most of the terms have "zero-ed" out, and we got a nice short polynomial.
+
+This actually applies to any generator, you can compute it for 3 (generator of size 16):
+
+$(x-3) * (x-9) * ... * (x-1) = x^16 - 1$
+
+And that's the main secret - by using powers of $\omega$ as positions of $a$ - we can easily compute the values of such large polynomial very quickly - and this is crucial, as it must be done during the verification of the proof.
+
+## Why 2-adicity
+
+In FRI, we'll be "folding" the polynomial, by cutting its degree by half - this means that being a large power of two, means that we can keep doing it for a long time, resulting in a small final polynomial degree.

@@ -1,8 +1,7 @@
-# boojum-docs
+# The book of Boojum 2.0
 
+![Cover](images/cover.png)
 
-Example:
-$$ 
-\frac{-b \pm \sqrt{b^2 - 4ac}}{2a} 
-$$ 
+How Boojum 2.0 turns programs into proofs.
+
 
