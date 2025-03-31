@@ -10,7 +10,7 @@ For most constraints, we assume they must hold true in every row except the last
 
 A Boolean constraint ensures that a variable can only have the value 0 or 1. If we represent the variable's column with the polynomial f, the constraint is expressed as:
 
-$ f * (f - 1)$
+$f * (f - 1)$
 
 Notice that this equation evaluates to 0 only when f is either 0 or 1.
 
@@ -19,7 +19,7 @@ Notice that this equation evaluates to 0 only when f is either 0 or 1.
 Also known as degree 1 (linear) or degree 2 (quadratic) constraints, these generally take the form:
 
 
-$c₀ + c1₁ * var₁ + c1₂ * var₂ + c2₁ * var₃ * var₄ = 0$
+$c_0 + c1_1 * var_1 + c1_2 * var_2 + c2_1 * var_3 * var_4 = 0$
 
 By definition, the value of this equation should always equal 0.
 
@@ -39,7 +39,7 @@ pub enum BoundaryConstraintLocation {
 
 Here, the constraint polynomial simply checks that the column equals the public input:
 
-$f(x) - {public\_input}$
+$f(x) - {publicInput}$
 
 The vanishing polynomial then takes care of ensuring this check is only applied on the selected rows.
 
@@ -50,7 +50,7 @@ Unlike the previous constraints that operate on the same row, state linkage cons
 Because of the way rows are mapped to polynomial values, this is equivalent to verifying:
 
   
-$ fₐ(x) - f_b(x * ω) == 0$ 
+$f_a(x) - f_b(x * ω) == 0$ 
 
 This check is typically applied only on selected rows (skipping the last two rows).
 
