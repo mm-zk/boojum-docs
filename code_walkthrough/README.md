@@ -1,5 +1,8 @@
 # Code walkthrough
 
+![Stages](../images/boojum_stages.png)
+
+
 This directory contains articles that offer a deeper look into the code - showing the exact step-by-step behavior together with code examples and code pointers.
 
 
