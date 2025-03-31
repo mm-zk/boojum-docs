@@ -1,21 +1,21 @@
-# Recursion a.k.a proving larger programs
+# Recursion a.k.a Proving Larger Programs
 
-Currently we can prove a circuit that has at most $2^{22}$ traces (cycles) - so we need a different solution for programs that are longer.
+Currently, we can prove a circuit that has at most $2^{22}$ traces (cycles). This limitation means we need a different solution for longer programs.
 
-The TL;DR of the idea - so to run the whole program, and split its execution trace into chunks of 2^22. For each one, we'll also remember some output state - so that we can compare it with the input state of the next one.
+The idea is simple: run the entire program and split its execution trace into chunks of $2^{22}$. For each chunk, we also record the output state so that we can compare it with the input state of the next chunk.
 
-This way, we'll end up with some number of circuits, that would represent the whole computation.
+By doing this, we create several circuits that together represent the full computation.
 
-Now, what we can do - is recursion - run a new program, that would verify all those proofs, and check that the inputs and outputs of consecutive circuits are matching.
+Next, we apply recursion. We run a new program that verifies all these proofs by checking that the outputs and inputs of consecutive circuits match.
 
-And then we can create a proof of this program too! And if we did the right job, this proof will require less cycles than the original program, so we'll end up with smaller number of proofs.
+Then, we create a proof for this new program. If done correctly, this proof will require fewer cycles than the original, resulting in a smaller number of proofs.
 
-Which we can verify again, and prove this verification etc etc.
+We can repeat this verification process—prove the verification, then prove that proof, and so on.
 
-After multiple steps, we should be able to end up with a final proof - that we can pass to our caller.
+After several iterations, we end up with a final proof that can be passed to our caller.
 
-## Small caveats
+## Small Caveats
 
-In practice, we also have precompiles (delegations) - that would produce their own set of proofs, that we will have to verify in the process too.
+In practice, we also use precompiles (delegations) that generate their own set of proofs, which must be verified during the process.
 
-So in the final step - we might want to run a slightly different version of our circruit, that doesn't use any delegations - and potentially has longer trace - so that the final proof is a single file.
+Thus, in the final step, we might need to run a slightly modified version of our circuit that does not use these delegations and possibly has a longer trace. This change ensures that the final proof is contained within a single file.

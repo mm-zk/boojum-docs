@@ -1,21 +1,17 @@
-# Fields and basic concepts
+# Fields and Basic Concepts
 
-All the operations in Boojum are happening on the Mersenne31 field - which is natural numbers modulo prime $p$, where $p = 2^{31} - 1$.
+Boojum works on the Mersenne31 field — the natural numbers modulo the prime $p$, where $p = 2^31 - 1$.
 
+Using this field means:
+- To represent larger numbers (like u32), you need to use two separate elements.
+- For safety, most entries in the field are assumed to be smaller than u16.
+- For operations requiring more bits, we use `Mersenne31Complex` (holding 2 elements) and `Mersenne31Quartic` (holding 4 elements).
 
-Using such fields means that:
+## Multiplicative Groups in Fields — Omega
 
-* to represent larger numbers, like u32, you have to use 2 separate elements
-* for safety we assume that most of the entries in the field are smaller than u16
-* for larger operations (where we need u64 etc) - we keep using `Mersenne31Complex` (holding 2 elements) and `Mersenne31Quartic` (holding 4 elements).
+In our documentation and code, you'll often see the symbol ω (omega). Here's a quick explanation.
 
-
-## Multiplicative groups in fields - omega
-
-In the documentation and code, you'll see $\omega$ - here's the quick explaination how it works.
-
-Let's use a field with a smaller prime - for example 17, pick a number 3 - and see what happens when we start multiplying 3 by itself within this field:
-
+Consider a smaller field, such as modulo 17. If we pick the number 3 and multiply it by itself:
 ```
 3^1 = 3
 3^2 = 9
@@ -23,92 +19,72 @@ Let's use a field with a smaller prime - for example 17, pick a number 3 - and s
 3^16 = 1
 3^17 = 3 
 ```
+Here, 3 is a generator of a multiplicative group of size 16 (which contains every element of the field except 0 — though this isn't always the case).
 
-So in our scenario, 3 is a generator of a multiplicative group of size 16 (this group also happens to contain all the elements of the field except for 0 - but this doesn't always have to be the case).
+Some interesting points:
+- If 3 generates a group of size 16, then $3^2 = 9$ generates a group of size 8.
+- Additionally, $9^2 mod 17 = 13$ generates a group of size 4:
+    ```
+    13^1 = 13
+    13^2 = 16
+    13^3 = 4
+    13^4 = 1
+    ```
+- Note that multiple groups of size 4 exist. For example, multiplying the generator by the original generator 3 creates a new coset:
+    ```
+    3 * 13^1 = 5
+    3 * 13^2 = 14
+    3 * 13^3 = 12
+    3 * 13^4 = 3
+    ```
+These are called "cosets" and are used in our code for Low Degree Extensions.
 
-Now let's look at some cool features:
+Visual examples are provided in the images below:
 
-if 3 is a generator of the group of size 16, then $3^2 = 9$ is a generator of a group of size 8, and $9^2 mod 17 = 13$ is a generator of a group of size 4.
+![Omega 3 Generator](../images/omega_3_generator.png)
 
-```
-13^1 = 13
-13^2 = 16
-13^3 = 4
-13^4 = 1
-```
+![Omega 9 Generator](../images/omega_9_generator.png)
 
-You can also notice that there can be multiple groups of size 4 - we can create a new one, by simply multiplying the generator by the original generator $3$.
+![Omega 9 Coset](../images/omega_9_coset.png)
 
-```
-3*13^1 = 5
-3*13^2 = 14
-3*13^3 = 12
-3*13^4 = 3
-```
+## Why Mersenne Field?
 
-These are so called "cosets" - and we will be using them when we do Low Degree Extensions in our code.
+Previously, we used the Goldilocks field ($p = 2^64 − 2^32 + 1$), known for its large multiplicative group with high 2-adicity (allowing the group size to be divisible by a large power of 2).
 
-You can see the things above visualized on images below:
+However, the Mersenne field's multiplicative group only has a 2-adicity of 1. To overcome this limitation, most operations are performed on the `MersenneComplex` struct — an extension field (similar to complex numbers) with a multiplicative group size of $2^31$.
 
-![Omega 3 Generator](images/omega_3_generator.png)
-
-![Omega 9 Generator](images/omega_9_generator.png)
-
-![Omega 9 coset](images/omega_9_coset.png)
-
-
-## Why Mersenne field ?
-
-In the previous system, we used Goldilocks field $p = 2^{64} − 2^{32} +1$, that had a nice large multiplicative group with a high 2-adicity (so the size of this group was divisible by a large power of 2).
-
-In case of mersenne field, the group that is spread on it, doesn't have this property (it is only divisible by $2^1$).
-
-So instead, we'll do most of the operations on the `MersenneComplex` struct - that is an  extension field (think - complex numbers) - and has a group of size $2^31$. 
-
-If you're curious: this is the generator for this group:
-
+For example, here is the generator for this group:
 ```rust
 pub const TWO_ADIC_GENERATOR: Self = Self {
-    c0: Mersenne31Field::new(311014874),
-    c1: Mersenne31Field::new(1584694829),
+        c0: Mersenne31Field::new(311014874),
+        c1: Mersenne31Field::new(1584694829),
 };
 ```
 
-## Why multiplicative groups
+## Why Multiplicative Groups?
 
-There are reasons why we decided to do operations in such groups, rather than directly on the elements of the field.
+Using multiplicative groups instead of direct field elements has its benefits, especially when computing "vanishing polynomials." For instance, consider the polynomial:
+    
+$(x - a₀) * (x - a₁) * (x - a₂) * ... * (x - a₈₃₈₈₆₀₇)$
 
-The main reason, is the fact that we have to keep computing "vanishing polynomial". (see [Basic polynomials](polynomials.md) for more info).
+Expanding this would normally yield a polynomial with many coefficients. However, when using group generators, many terms cancel out.
 
-Imagine that you have to compute the polynomial that looks like this:
-
-$(x-a_0) * (x-a_1) * (x-a_2) * ... * (x-a_{8388607})$
-
-This would result in a very large polynomial with lot of coefficients.
-
-But here's where the multiplicative groups help.
-
-Let's start with a simple example: 
-
-16 is a generator of a group of size 2 in field modulo 17.
-
+For a simple example, when 16 is the generator of a group of size 2 in modulo 17:
 ```
 16^1 = 16
 16^2 = 1
 ```
+Then,
+    
+$(x - 16) * (x - 1) = x^2 - (16 + 1)x + 16 = x^2 - 1$
 
-Let's compute:
+Notice how most coefficients vanish, resulting in a cleaner polynomial. Similarly, with 3 as a generator for a group of size 16:
+    
+$(x - 3) * (x - 9) * ... * (x - 1) = x^{16} - 1$
 
-$(x-16) * (x-1) = x^2 - (16+1)x +16 = x^2 - 1$
+This is the key benefit: using powers of ω as positions for the values a allows us to compute large polynomials quickly. This efficiency is crucial during proof verification.
 
-As you can see - most of the terms have "zero-ed" out, and we got a nice short polynomial.
+## Why 2-adicity?
 
-This actually applies to any generator, you can compute it for 3 (generator of size 16):
+In FRI (Fast Reed-Solomon Interactive Oracle Proofs of Proximity), the polynomial is "folded," which reduces its degree by half. Because the sizes involved are powers of two, this process can be repeated many times, eventually resulting in a low-degree polynomial.
 
-$(x-3) * (x-9) * ... * (x-1) = x^16 - 1$
-
-And that's the main secret - by using powers of $\omega$ as positions of $a$ - we can easily compute the values of such large polynomial very quickly - and this is crucial, as it must be done during the verification of the proof.
-
-## Why 2-adicity
-
-In FRI, we'll be "folding" the polynomial, by cutting its degree by half - this means that being a large power of two, means that we can keep doing it for a long time, resulting in a small final polynomial degree.

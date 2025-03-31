@@ -1,16 +1,14 @@
 # Non determinism a.k.a I/O
 
-Most of programs require some kind of inputs and outputs - they would open files, listen on the network sockets etc.
+Most programs require some form of input and output, such as opening files or listening on network sockets.
 
-In case of boojum 2.0 - all of this is happening via reads & writes to a special CSR register.
+In boojum 2.0, all input/output operations are handled by reading from and writing to a special CSR register. We use register `0x7c0` (1984) for every I/O operation.
 
-We'll use register `0x7c0` (1984) for all the input & outputs.
+Similarly, we manage delegations through designated delegation coprocessors, each associated with a unique register value (for example, `0x7c2` is used for blake32). More details are available on the [Delegations](delegations.md) page.
 
-We'll use the similar way of communication for delegations too - having different delegation coprocessors under different register values (for example `0x7c2` for blake32 etc). More info in [Delegations](delegations.md) page.
+## Using the CSR Register
 
-## Using CSR register
-
-For example, if the program wants to read something from the outside - it should first define what it wants to read - by sending the bytes to that register using a helper method:
+If a program needs to read external data, it must first indicate what to read by sending bytes to the CSR register using a helper method:
 
 ```rust
 pub fn csr_write_word(word: usize) {
@@ -24,7 +22,7 @@ pub fn csr_write_word(word: usize) {
 }
 ```
 
-Such opcode will be caught by the risc v simulator - and handled (usually by calling a specific "Oracle", that would be able to provide some data, which later can be read by your program by calling `csr_read_word`).
+This instruction is intercepted by the RISC-V simulator, which processes it (typically by invoking a specific "Oracle" that supplies the required data). Later, the program can retrieve the data by calling `csr_read_word`.
 
 ```rust
 fn csr_read_word() -> u32 {
@@ -41,13 +39,12 @@ fn csr_read_word() -> u32 {
 }
 ```
 
-Note - as all programs are deterministic - we can record all the data that is being fed to the csr_read_word - and during proving time, we no longer need to run custom oracles code - but just provide the stream of this data (and ignore any data that the program writes in `crs_write_word()`).
+Note – Since programs are deterministic, you can record all data supplied to the `csr_read_word`. Then, during verification, you no longer need to execute custom Oracle code; instead, you provide the recorded data stream (ignoring any data the program sends via `csr_write_word`).
 
-## Final outputs
+## Final Outputs
 
-It is important that the program returns the final outputs inside the registers - rather than trying to write them into CRS.
+It is crucial that a program returns its final outputs via registers, rather than writing them to the CSR.
 
-usual flow, is that the program reads the expected output value from the input, and then simply returns "1" in register if this is correct and 0 otherwise.
+Typically, the program retrieves an expected output from input, then returns "1" in a register if it matches, or "0" if it does not.
 
-Final register values are being passed through the recursion steps - therefore even the final recursion step keeps them, and allows final caller to easily verify their value.
-
+The final register values are propagated through all recursive steps, allowing the final caller to verify the result easily.

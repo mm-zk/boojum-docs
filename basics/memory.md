@@ -1,9 +1,8 @@
-# Memory and registers
+# Memory and Registers
 
-In this article, we'll cover memory and register access - which is done in basically every single step.
+In this article, we'll explain memory and register access, which is used in nearly every execution step.
 
-
-Imagine you have the following code:
+Consider the following code:
 
 ```asm
 set r2, 0
@@ -11,44 +10,39 @@ add r2, 5
 add r2, 7
 ```
 
-In each step, you add some constant to register 2 - how should this be represented in our trace ?
+In each step, you add a constant to register 2. How should this be captured in our trace?
 
-If you look at the middle step - what we're actually doing is:
+Take the middle step as an example. What happens is:
 
-* reading value 0 from register 2
-* adding 5 to it
-* writing value 5 into register 2
+* The value 0 is read from register 2.
+* 5 is added to it.
+* The result, 5, is written back into register 2.
 
-And that's how it will be represented in the trace.
-We know that each step can access at most 3 different memory/register slots (1-2 for reading, and 1 for writing), so the code above will be written to the trace as:
+This sequence will be reflected in the trace. We know that each step can have up to three memory/register interactions (two reads and one write). Thus, the code will be recorded in the trace as:
 
 // TODO: add trace.
 
-To make things easier later, we can treat each read, as a write - but making sure that we are writing back the same value.
+To simplify things later, we treat each read operation like a write, ensuring that we write back the same value. So each operation is represented as a tuple:
 
-So each such operation would look like the tuple below:
-
+```
 (read_address, last_written_timestamp, read_value, current_timestamp, written_value)
+```
 
-Now how can we prove that all accesses to the memory or registers were correct. We do the following trick.
+But how do we prove that all memory and register accesses were performed correctly? We use the following method.
 
-Each such operation is broken into two pieces:
+Each operation is split into two parts:
 
-* 1: (read_address, last_written_timestamp, read_value)
-* 2: (read_address, current_timestamp, written_value)
+1. (read_address, last_written_timestamp, read_value)
+2. (read_address, current_timestamp, written_value)
 
-moreover we'll also add "boundary" values:
-* for init -- all "(read_address, 0, 0)
-* for teardown -- all "(read_address, last_written timestamp, last_value)"
+Additionally, we include "boundary" values:
+* For initialization — all entries are "(read_address, 0, 0)"
+* For teardown — all entries are "(read_address, last_written_timestamp, last_value)"
 
+## Proving Consistency
 
-## Proving consistency
+If you inspect the process, you'll notice that if the set of operations from the initialization plus teardown matches the set from the read and write stages, it means every memory and register access is consistent.
 
-If you look carefully, you can notice that if set 1 + teardown matches set 2 + init - it means that all the memory reads & writes were consistent.
+This works because every write has a unique timestamp. For each value written, there should be a corresponding read where the "last_written_timestamp" exactly matches the write's timestamp.
 
-This is due to a fact that each write is unique (it must have unique timestamp) - and for every written value, we should have a read value with exactly identical parameters (as the "last_written_timestamp" in the read should match the timestamp from the right).
-
-We can prove such set matching - by computing the multiplication of all the elements from the first group (+ random $\alfa$) and doing the same to the last group. If the final value matches, it means that both sets were equal.
-
-
-
+To verify that both sets are identical, we multiply all the elements from the first group (with an added random $\alpha$) and compare it to the multiplication of all elements from the second group. If the final results are the same, the sets match.
