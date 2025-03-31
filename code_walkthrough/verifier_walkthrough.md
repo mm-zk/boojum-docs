@@ -242,7 +242,7 @@ for (step, folding_degree_log_2) in FRI_FOLDING_SCHEDULE.iter().enumerate() {
 
 ### Monomial Form
 
-After several folding steps, the $deep$ polynomial reduces to a low degree. At this stage, the proof can present its monomial form (parameters $a_0, a_1, a_2, ...$ for the polynomial $a_0 + a_1*x + a_2*x^2 + \ldots$. ). The final step is to evaluate this polynomial at the current `evaluation_point` and ensure that it matches `expected_value`. (Note: Both the evaluation point and expected value change during folding; see [fri_query](../basics/fri_query.md) for details.)
+After several folding steps, the $deep$ polynomial reduces to a low degree. At this stage, the proof can present its monomial form (parameters $a_0, a_1, a_2, ...$ for the polynomial $a_0 + a_1 *x + a_2 *x^2 + \ldots$. ). The final step is to evaluate this polynomial at the current `evaluation_point` and ensure that it matches `expected_value`. (Note: Both the evaluation point and expected value change during folding; see [fri_query](../basics/fri_query.md) for details.)
 
 ## Summary
 
