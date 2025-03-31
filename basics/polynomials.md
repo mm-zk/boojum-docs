@@ -18,7 +18,7 @@ It is also possible to select a different set of points. One effective choice is
 
 ## Divisor Polynomials
 
-If a polynomial is meant to be 0 at certain points (for example, $b_1, b_2$, etc), then it must be divisible by the polynomial $d(x) = (x-b_1) * (x-b_2) * ...$. 
+If a polynomial is meant to be 0 at certain points (for example, $b_1, b_2$, etc), then it must be divisible by the polynomial $d(x) = (x-b_1) * (x-b_2) *  \ldots $. 
 
 This ensures that the result of the division is another polynomial. This approach is often used to verify that certain constraints are satisfied. When you have a list of points where you expect the polynomial to equal 0, you construct this divisor polynomial and then prove (for example via FRI) that the quotient (which is the result $f(x) / d(x)$ ) is indeed forms a valid polynomial.
 

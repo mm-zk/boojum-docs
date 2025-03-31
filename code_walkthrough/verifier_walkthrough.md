@@ -154,7 +154,7 @@ let first_row_contribution = {
 }
 ```
 
-In the final part, we divide by `divisors[2]` (the first row divisor, $1 / (x - omega^0)$). The final quotient then combines contributions using a random $\beta$:
+In the final part, we divide by `divisors[2]` (the first row divisor, $1 / (x - omega^0)$ ). The final quotient then combines contributions using a random $\beta$:
 
 ```rust
 let mut quotient = every_row_except_last_contribution;
@@ -173,7 +173,7 @@ After confirming the quotient polynomial evaluation at $z$, we prove two additio
 
 Instead of checking each polynomial separately, we combine them into a single polynomial using a random parameter $\alpha$. The combined polynomial looks roughly like:
 
-$deep = f_{setup_0} + \alpha*f_{setup_1} + ... + \alpha^5*f_{witness_0} + \ldots$
+$deep = f_{setup_0} + \alpha*f_{setup_1} + ... + \alpha^5*f_{witness_0} + \ldots $
 
 This polynomial also includes the quotient polynomial, so if we can prove that $deep$ has the correct degree, the original polynomials are all valid.
 
@@ -221,7 +221,7 @@ Some points are evaluated at $z$, while others at $z * \omega$—the latter is n
 let expected_value = accumulate_over_row_for_consistency_check(...);
 ```
 
-Here, the $deep$ polynomial is a combination of various column polynomials. Using `precompute_with_evals_at_z` and `precompute_with_evals_at_z_omega`, we compute $deep(z)$. The `query_index` then lets us access $deep(\omega^{query\_index})$ (referred to as `evaluation_point`). This value is used in the FRI folding process, where in each step the degree of the deep polynomial is reduced and the expected value is updated (more details in [fri_query](fri_query.md)).
+Here, the $deep$ polynomial is a combination of various column polynomials. Using `precompute_with_evals_at_z` and `precompute_with_evals_at_z_omega`, we compute $deep(z)$. The `query_index` then lets us access $deep(\omega^{queryIndex})$ (referred to as `evaluation_point`). This value is used in the FRI folding process, where in each step the degree of the deep polynomial is reduced and the expected value is updated (more details in [fri_query](fri_query.md)).
 
 ```rust
 for (step, folding_degree_log_2) in FRI_FOLDING_SCHEDULE.iter().enumerate() {
@@ -242,7 +242,7 @@ for (step, folding_degree_log_2) in FRI_FOLDING_SCHEDULE.iter().enumerate() {
 
 ### Monomial Form
 
-After several folding steps, the $deep$ polynomial reduces to a low degree. At this stage, the proof can present its monomial form (parameters $a_0, a_1, a_2, ...$ for the polynomial $a_0 + a_1*x + a_2*x^2 + ...$). The final step is to evaluate this polynomial at the current `evaluation_point` and ensure that it matches `expected_value`. (Note: Both the evaluation point and expected value change during folding; see [fri_query](../basics/fri_query.md) for details.)
+After several folding steps, the $deep$ polynomial reduces to a low degree. At this stage, the proof can present its monomial form (parameters $a_0, a_1, a_2, ...$ for the polynomial $a_0 + a_1*x + a_2*x^2 + \ldots $ ). The final step is to evaluate this polynomial at the current `evaluation_point` and ensure that it matches `expected_value`. (Note: Both the evaluation point and expected value change during folding; see [fri_query](../basics/fri_query.md) for details.)
 
 ## Summary
 

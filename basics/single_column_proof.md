@@ -12,7 +12,7 @@ Given this assumption, how can we verify that all the values are indeed 0 or 1?
 
 First, we ask the prover to compute the polynomial $g(x) = f(x) * (f(x)-1)$. Notice that if $f(x)$ truly only takes the values 0 or 1 at the points $\omega$, then $g(x)$ will be 0 at those points.
 
-This implies that all these points are roots of the polynomial, so it can be factored as: $g(x) = (x-\omega) * (x-\omega^2)*...*(x-\omega^{n-1})*q(x)$, where $q(x)$ is the remainder.
+This implies that all these points are roots of the polynomial, so it can be factored as: $g(x) = (x-\omega) * (x-\omega^2)*...*(x-\omega^{n-1})*q(x)$ , where $q(x)$ is the remainder.
 
 It is important to note that because we selected these special points $\omega$, the product $(x-\omega)*(x-\omega^2)...$ simplifies to $(x^N-1)$.
 

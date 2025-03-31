@@ -1,6 +1,6 @@
 # Fields and Basic Concepts
 
-Boojum works on the Mersenne31 field — the natural numbers modulo the prime $p$, where $p = 2^31 - 1$.
+Boojum works on the Mersenne31 field — the natural numbers modulo the prime $p$, where $p = 2^{31} - 1$.
 
 Using this field means:
 - To represent larger numbers (like u32), you need to use two separate elements.
@@ -49,7 +49,7 @@ Visual examples are provided in the images below:
 
 ## Why Mersenne Field?
 
-Previously, we used the Goldilocks field ($p = 2^64 − 2^32 + 1$), known for its large multiplicative group with high 2-adicity (allowing the group size to be divisible by a large power of 2).
+Previously, we used the Goldilocks field ($p = 2^{64} − 2^{32} + 1$), known for its large multiplicative group with high 2-adicity (allowing the group size to be divisible by a large power of 2).
 
 However, the Mersenne field's multiplicative group only has a 2-adicity of 1. To overcome this limitation, most operations are performed on the `MersenneComplex` struct — an extension field (similar to complex numbers) with a multiplicative group size of $2^31$.
 
@@ -65,7 +65,7 @@ pub const TWO_ADIC_GENERATOR: Self = Self {
 
 Using multiplicative groups instead of direct field elements has its benefits, especially when computing "vanishing polynomials." For instance, consider the polynomial:
     
-$(x - a₀) * (x - a₁) * (x - a₂) * ... * (x - a₈₃₈₈₆₀₇)$
+$(x - a_0) * (x - a_1) * (x - a_2) * ... * (x - a_{8388607})$
 
 Expanding this would normally yield a polynomial with many coefficients. However, when using group generators, many terms cancel out.
 
