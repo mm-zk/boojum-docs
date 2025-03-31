@@ -5,14 +5,22 @@ The term "trace" (short for execution trace) is central to this document. Essent
 Imagine a program like this:
 
 ```rust
-for i in 0..5 {
-    a += i;
-}
+1: for i in 1..5 {
+2:     a += i;
+3: }
 ```
 
 A corresponding trace might look like this:
 
-// TODO: insert table.
+| timestamp | pc   | i   | a   |
+|-----------|------|-----|-----|
+| 0         | 0x01 | 1   | 0   |
+| 1         | 0x02 | 1   | 1   |
+| 2         | 0x01 | 2   | 1   |
+| 3         | 0x02 | 2   | 3   |
+| 4         | 0x01 | 3   | 3   |
+| 5         | 0x02 | 3   | 6   |
+
 
 Note that we don't create a column for every program variable (since most don't change every step). Instead, we include columns for significant memory reads (from memory, registers, etc.) and for variables directly involved in execution (like the program counter).
 
