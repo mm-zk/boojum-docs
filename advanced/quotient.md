@@ -26,7 +26,7 @@ This function depends on the type of constraint. For a simple boolean constraint
 The matching function determines at which points a constraint applies. For example:
 * If a constraint should only apply in the 10th row, the matching function is $(x-\omega^{10})$, since the 10th row corresponds to $\omega^{10}$ in the polynomial.
 * If a constraint applies to both the 5th and 10th rows, the matching function is $(x-\omega^{5})*(x-\omega^{10})$.
-* If a constraint should apply to all rows, the matching function would be $(x-\omega^{0})*(x-\omega^{1})*... = (x^N - 1)$ - and this is the real reason why we picked $\omega$ - as this huge constrain nicely folds into short polynomial. See [polynomial basics](../basics/polynomials.md) for more info.
+* If a constraint should apply to all rows, the matching function would be $(x-\omega^{0} ) * (x - \omega^{1})* ... = (x^N - 1)$ - and this is the real reason why we picked $\omega$ - as this huge constrain nicely folds into short polynomial. See [polynomial basics](../basics/polynomials.md) for more info.
 * If it should apply to all rows except the first, it becomes $(x^N - 1) / (x - 1)$.
 
 ## Putting them together
@@ -36,13 +36,13 @@ Once we have the constraints and their corresponding divisors, they are combined
 To create this combined polynomial, we use two random values: $\alpha$ and $\beta$. These values are randomly selected based on a hash from the full trace. We proceed as follows:
 1. Collect all constraints that apply to all rows and multiply each by increasing powers of $\alpha$. Then, apply the common divisor:
    
-   $all\_rows(x) = (\sum_i contrib_i(x) * \alpha^i) / all\_rows\_divisor(x)$
+   $all\_rows(x) = (\sum_i contrib_i(x) * \alpha^i) / allRowsDivisor(x)$
 
 2. A similar method is applied to constraints that only cover the first row, all rows except the first, etc. (typically around 6 combinations in total).
 
 3. The final quotient is the sum of these terms, each weighted by powers of $\beta$:
 
-   $quotient(x) = all\_rows(x) + first\_row(x) * \beta + except\_last(x) * \beta^2 + ...$
+   $quotient(x) = allRows(x) + firstRow(x) * \beta + exceptLast(x) * \beta^2 + ...$
 
 ## Summary
 
