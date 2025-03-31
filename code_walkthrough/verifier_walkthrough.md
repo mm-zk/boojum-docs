@@ -2,6 +2,10 @@
 
 This guide explains the verification process, detailing how we obtain and use proof and FRI query data.
 
+Note: that we have a separate standalone code for each verifier - all coming from the common "verifier" directory.
+
+Morever all the quotient code is auto-generated from the circruit description.
+
 ## Inputs
 
 ```rust
