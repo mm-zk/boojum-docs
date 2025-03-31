@@ -1,57 +1,41 @@
-# Lookups and range checks
+# Lookups and Range Checks
 
-One thing that we have to often do in a circruit, is check some inequality - for example that a given value first in u16.
+Often in circuits, you need to verify an inequality—for instance, that a given value fits in a u16. Regular constraints work well for equality checks, but not so much for proving the opposite condition. We solve this by using lookup tables.
 
-Unfortunately regular constraints are not great at that - they check that something is equal to something else, but proving the opposite is very hard.
+For example, if you need to ensure that $x < 2^{16}$, you can create a table of all values from 0 to 65535. Then, by proving that x matches one of those entries, you effectively confirm the inequality.
 
-That's why we turn things around and use lookup tables.
+Lookup tables are also useful for demonstrating the results of operations like XOR or hashing. Some operations are difficult to define as code but simple to represent in a table that maps possible inputs to outputs. In boojum 2.0, there are around 40 different tables (see `enum TableType`) covering a range of functions—from binary operations like OR and XOR to power of 2 calculations and bit-specific range checks.
 
-When you say "I want to check that x <  2^16" - you can represent it as - here's a table with all the values from 0 to 65535 - and please prove that this value is matching some element in there.
+While adding a new table to the circuit can be costly (because all its values must be inlined into the main trace table, specifically into the setup columns), it is sometimes necessary.
 
-This can be also useful if you want to represent the results of some other operations (like Xor or hashing) - that might be hard to build as code - but easy to generate a table with all the possible inputs and outputs, and prove that your input and output pair belongs to this table.
+## Step 1 - Adding a Table
 
-In boojum 2.0, we have around 40 different tables (check enum TableType) - ranging from binary operations (like Or or Xor), to tables with power of 2, range checks for different bits etc.
+If your circuit requires a particular lookup table, it must be enabled in the table driver. This ensures that during circuit compilation, all the elements from the table will be incorporated into the setup columns (specifically into generic_lookup_columns).
 
-Adding a new table to the circruit can be expensive (as you have to inline all its values into the main trace table - into setup columns) - but in many cases it is unavoidable.
+## Step 2 - Multiplicities Table
 
-## Step 1 - adding a table
+Each generic lookup column in the setup table will have a corresponding "multiplicities" column in the witness trace. This column tracks the number of times each table entry is accessed during the circuit’s execution.
 
-If your circtuit wants to use a given lookup table, it has to be explicitly enabled in the table driver. 
+## Step 3 - Lookup Column
 
-This way, when we start compiling the circuit into the trace, the compilation process will take all the elements from this table, and inline them into setup columns (into generic_lookup_columns to be specific).
+Lastly, the witness table will include several lookup columns. These are where the values, which will be verified against the lookup tables, are placed.
 
-## Step 2 - multiplicities table
+## Putting It All Together
 
-For every generic lookup column in the setup table, there will be a corresponding "multiplicities" column in witness trace.
+For simplicity, assume that the lookup table has a width of 1 (although in practice, they usually have a width of 3 columns plus an additional column for the table ID).
 
-Its role is to keep track of how many times a given table entry was accessed during program execution.
+This means that, for example, the 3rd column in the setup trace will contain all the table elements. The 7th column in the witness trace will hold the multiplicities, and the 15th column will contain the values that must match an entry in the table.
 
-## Step 3 - lookup column
+Imagine you have a lookup table containing only even numbers. The table might look like this (note that multiplicities and values are filled during witness generation):
 
-Finally, the witness table would also have multiple lookup columns in witness trace - where the values that should be present in lookup tables will be placed.
+| setup | multiplicities | values |
+|-------|----------------|--------|
+| 0     | 1              | 2      |
+| 2     | 3              | 2      |
+| 4     | 1              | 0      |
+| 6     | 0              | 4      |
+| 8     | 0              | 2      |
 
+To prove the validity of the lookup, you will compare multisets using a grand product:
 
-## Putting it all together
-
-For simplicity, let's assume that our lookup table has width 1 (in practive, they usually have a width of 3 columns + one more for table id.)
-
-This means that let's say a 3rd column in setup trace will contain all the elements of the table.
-
-There will be 7th column in witness that will be holding mulitplicities, and 15th column in witness where all the values present should be in the table.
-
-Imagine we have a lookup table that holds only even numbers:
-
-It would look like this - notice that multiplicities & values are filled during witness generation.
-
-| setup | mutiplicities | values |
-|-------|---------------|--------|
-| 0     | 1             | 2      |
-| 2     | 3             | 2      |
-| 4     | 1             | 0      |
-| 6     | 0             | 4      |
-| 8     | 0             | 2      |
-
-
-For proving, what we'll have to compare multisets - using a grand product of 
-
-$\Pi_x  (setup[x] + \gamma) ^ {mult[x]}  == \Pi_x (values[x] + \gamma) $
+$\Pi_x  (setup[x] + \gamma) ^ {mult[x]}  == \Pi_x (values[x] + \gamma)$

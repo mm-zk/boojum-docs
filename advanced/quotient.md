@@ -1,66 +1,49 @@
-# What is quotient ?
+# What is quotient?
 
-Circtuit usually contains a lot of constraints (boolean, quadratic, lookups) - please see [constraint](constraint.md) for more info.
+Circuit computations typically involve numerous constraints (boolean, quadratic, lookup-based). For more on constraints, please refer to [constraint](../basics/constraint.md).
 
-In [single column](single_column.md) you can see how to take a single (boolean in this example) constraint and check that it holds using FRI proof.
-
-In case of a single circuit, we might have thousands of these constraints, so instead of handling them one-by-one we combine it together into a single `quotient` polynomial.
+For example, the [single column](../basics/single_column_proof.md) document shows how to verify a single (boolean in this case) constraint using an FRI proof. In circuits, there might be thousands of constraints, so rather than handling them one by one, we combine them into a single `quotient` polynomial.
 
 ## Constraint
 
-Each constraint usually has 2 parts:
-* how to create a polynomial that is equal to 0 in points where it should be matching
-* in which points it should apply.
+Each constraint usually has two parts:
+* A method to construct a polynomial that equates to 0 at the required points.
+* A specification of the points where it should hold.
 
-For example:
-* many constraints would match in all rows except for the last one
-* public input constraint might only apply in the first row
-* some checking constraints might only apply in the last row.
+For instance:
+* Many constraints apply to all rows except the last.
+* Public input constraints might only apply to the first row.
+* Some checking constraints may only be relevant for the last row.
 
-So the whole idea is to take these constraints in the form of $contrib(x) / matching(x)$ and combine them together.
+The overall idea is to merge these constraints, which take the form $contrib(x) / matching(x)$, into one expression.
 
 ### Contrib function
 
-This function depends on the type of constraint. For simple boolean it would be $f(x) * (f(x)-1)$, for a linear constraint that says that 5th witness column * 5 should be equal to 3, it would be $witness_5(x)*5 - 3$ etc.
-
-The main goal, is that if this constraint should hold - this function should be equal to 0 in that point
+This function depends on the type of constraint. For a simple boolean constraint, it would be $f(x) * (f(x)-1)$. For a linear constraint stating that the 5th witness column multiplied by 5 should equal 3, it would be $witness_5(x)*5 - 3$. The key is that if the constraint holds, this function will equal 0 at that point.
 
 ### Matching function (a.k.a divisor)
 
-If a given constraint should only match in 10th row - it would be simply equal to: $(x-\omega^{10})$ - as remember that when we put things into polynomials, the 10th row is placed in coordinate $\omega^{10}$.
-
-If a given constraint should only match in 5th & 10th row - it would be
-equal to $(x-\omega^{5})*(x-\omega^{10})$.
-
-and so on.
-
-The real reason why we selected $\omega$ - is when the constraint should apply to all the rows -- then the divisor would be equal to:
-
-$(x-\omega^{0})*(x-\omega^{1})*... = (x^N - 1)$.
-
-Which means that if divisor should apply to all the rows except first, it would be simply:
-
-$(x^N - 1) / (x - 1)$
+The matching function determines at which points a constraint applies. For example:
+* If a constraint should only apply in the 10th row, the matching function is $(x-\omega^{10})$, since the 10th row corresponds to $\omega^{10}$ in the polynomial.
+* If a constraint applies to both the 5th and 10th rows, the matching function is $(x-\omega^{5})*(x-\omega^{10})$.
+* If a constraint should apply to all rows, the matching function would be $(x-\omega^{0})*(x-\omega^{1})*... = (x^N - 1)$ - and this is the real reason why we picked $\omega$ - as this huge constrain nicely folds into short polynomial. See [polynomial basics](../basics/polynomials.md) for more info.
+* If it should apply to all rows except the first, it becomes $(x^N - 1) / (x - 1)$.
 
 ## Putting them together
 
-How that we have constraints and divisors, we have to put them together into a single polynomial (and if we prove that this polynomial exists - then it means that all these constraints are really matching - please see [single_column](single_column.md) for more details why).
+Once we have the constraints and their corresponding divisors, they are combined into a single polynomial. Demonstrating the existence of this quotient polynomial proves that all components of the combined expression are valid polynomials and that the constraints hold for their respective rows. For details, see [single_column](../basics/single_column.md).
 
-For this, we'll use 2 different random values: $\alpha, \beta$ (Important - they have to be randomly selected, using the seed that is based off some hash from the full trace).
+To create this combined polynomial, we use two random values: $\alpha$ and $\beta$. These values are randomly selected based on a hash from the full trace. We proceed as follows:
+1. Collect all constraints that apply to all rows and multiply each by increasing powers of $\alpha$. Then, apply the common divisor:
+   
+   $all\_rows(x) = (\sum_i contrib_i(x) * \alpha^i) / all\_rows\_divisor(x)$
 
-We'll first collect all the constraint that should apply to all rows - and multiply them with powers of alpha - and then apply the common divisor:
+2. A similar method is applied to constraints that only cover the first row, all rows except the first, etc. (typically around 6 combinations in total).
 
-$all\_rows(x) = (\sum_i contrib_i(x) * \alpha^i) / all\_rows\_divisor(x)$
+3. The final quotient is the sum of these terms, each weighted by powers of $\beta$:
 
-Then we'd do similar thing for all constraints that apply to the first row, all rows except first etc etc (in total we have around 6 combinations).
-
-And final quotient will be a sum of these, using powers of $\beta$ as a coefficient:
-
-$quotient(x) = all\_rows(x) + first\_row(x) * \beta + except\_last(x) * \beta^2 + ...$
-
+   $quotient(x) = all\_rows(x) + first\_row(x) * \beta + except\_last(x) * \beta^2 + ...$
 
 ## Summary
 
-Quotient is an extension of the example in [single_column](single_column.md) that is applied to all the constraints at the same time.
-
-This way, if we can prove that the quotient is the actual polynomial, it automatically proves that all of the parts of it must have been polynomials too, therefore proving that the constraints did hold on their respective rows. 
+The quotient polynomial extends the approach presented in [single_column](../basics/single_column_proof.md) by incorporating all constraints simultaneously. If we can prove that the quotient is a valid polynomial, it confirms that all individual parts are also polynomials, thereby ensuring that the constraints hold on their designated rows.

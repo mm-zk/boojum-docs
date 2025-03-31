@@ -1,51 +1,44 @@
-# Setup columns
+# Setup Columns
 
-Setup columns can be considered "constants" - their values can be filled during circruit "compilation" time, and they don't depend on any execution parameters.
+Setup columns act like constants: their values are established during circuit "compilation" time and remain unchanged during execution.
 
+Currently, there are three types of setup columns:
 
-Currently we have 3 different ones:
+* Timestamps
+* Range check 16
+* Generic lookups
 
-* timestamps
-* range check 16
-* generic lookups
-
-
-We fill out these columns during circruit compilation - in SetupPrecomputations.
+These columns are populated during circuit compilation in the SetupPrecomputations stage.
 
 ## Timestamps
 
-Timestamp column has size 2, and increases in every row. (it has size 2, as our circuits can handle up to 2^24 rows,  and for simplicity we consider timestamp to be u32).
+The Timestamp column has a size of 2 and increases with each row. (It has size 2 since our circuits can handle up to 2^24 rows, and for simplicity we treat the timestamp as u32.)
 
-For each row, we usually use multiplications of 4 (so first row has timestamp 0, second timestamp 4 etc) - controlled with NUM_EMPTY_BITS_FOR_RAM_TIMESTAMP. 
-This allows us to have fine-grained timestamps for memory accesses (as we can do up to 4 memory accesses within a single step - we can give them unique timestamps).
+For each row, the timestamp typically increases by multiples of 4 (e.g., the first row has a timestamp of 0, the second 4, and so on). This increment is controlled by `NUM_EMPTY_BITS_FOR_RAM_TIMESTAMP`. Using multiples of 4 allows us to timestamp up to 4 memory accesses within a single step uniquely.
 
-We actually have an optimization, that if we don't need to shuffle timestamps, we don't create this column implicitly.  This is usually the case for main risc V circruit (as we increment timestamp in each step).
-For delegation circruits - that are processing delegations coming at different timestamps, these columns must be explicitly present.
+An optimization exists: if timestamp shuffling is not required, the column is not created implicitly. This is generally acceptable for the main RISC-V circuit, where the timestamp is increased in every step. However, for delegation circuits— which process delegations arriving at different timestamps— the columns must be explicitly included.
 
+## Generic Lookups
 
+These columns store all elements from lookup tables. Each set of columns is sized to 4, which is the maximum size for a single lookup table entry (3 columns for data, with the last column used for the lookup table id).
 
-## Generic lookups
+If the number of lookup entries exceeds the number of rows, additional copies of these columns may be created so that all elements fit.
 
-These columns keep all the elements from lookup tables. Each "column set" has size 4 (which is the max size of a single lookup table entry - which is 3 + last column is used to keep lookup table id).
+## Range Check
 
-If number of lookup entries is larger than number of rows, we might create more copies of these columns, so that all elements fit.
+A single column is used to store every value in the range $0 .. 2^{16}$. We use many u16 checks since u32 values don’t fit our field, and we assume that the highest value in any cell is a u16.
 
+Because a u16 check only requires one column—and because there’s no need to store an extra column with a table id—it is more efficient to use a single column instead of the four that would be necessary if combined with the generic lookups.
 
-## Range check
+## Example Trace Table
 
-A single column, that keeps all values from 0 .. 2^16. We are using a lot of u16 checks (this is due to the fact that u32 doesn't fit our field, so we usually assume that the highest value that we keep in a given cell is u16).
+Below is an example trace table. The table includes the timestamp (represented as a single column), a u16 range check, and generic lookups (illustrated by an XOR operation with table_id = 5):
 
-As u16 check just requires a single column, plus we don't need to store additional column with table id, this allows us to use just a single column instead of 4, that we would have used if we kept it together with other generic lookups.
-
-## Example trace table
-
-In the table below, with timestamp (here represented as single column, u16 range check, and generic lookups - here showing a XOR with table_id = 5)
-
-| Timestamp | Range Check | Generic 1   | Generic   2 | Generic 3  | Generic 4 |
-|-----------|-------------|-------------|-------------|------------|-----------|
-| 0         | 0           | 0           | 1           | 1          | 5         |
-| 4         | 1           | 1           | 2           | 3          | 5         |
-| 8         | 2           | 2           | 0           | 2          | 5         |
-| 12        | 3           | 3           | 4           | 7          | 5         |
-| 16        | 4           | 4           | 5           | 1          | 5         |
-| 20        | 5           | 5           | 6           | 3          | 5         |
+| Timestamp | Range Check | Generic 1 | Generic 2 | Generic 3 | Generic 4 |
+|-----------|-------------|-----------|-----------|-----------|-----------|
+| 0         | 0           | 0         | 1         | 1         | 5         |
+| 4         | 1           | 1         | 2         | 3         | 5         |
+| 8         | 2           | 2         | 0         | 2         | 5         |
+| 12        | 3           | 3         | 4         | 7         | 5         |
+| 16        | 4           | 4         | 5         | 1         | 5         |
+| 20        | 5           | 5         | 6         | 3         | 5         |
