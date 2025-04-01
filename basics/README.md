@@ -9,14 +9,14 @@ Its proof correctness can be quickly verified, and the verification time remains
 Suggested order of reading:
 
 * [non_determinism](./non_determinism.md) – How input and output work
-* [delegation](./delegation.md) – Learn how to call precompiles
+* [delegations](./delegations.md) – Learn how to call precompiles
 * [recursion](./recursion.md) – How we prove larger programs
 
 * [field](./field.md) – Basic math
 * [polynomials](./polynomials.md) – Basic info and tricks about polynomials
 
 * [trace](./trace.md) – How we form the execution trace
-* [constraints](./constraints.md) – Basic building blocks of proofs
+* [constraint](./constraint.md) – Basic building blocks of proofs
 * [memory](./memory.md) – Insights into how memory access is represented
 
 * [single_column_proof](./single_column_proof.md) – Putting it all together
