@@ -1,0 +1,1269 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>The book of Boojum 2.0</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="index.html"><strong aria-hidden="true">1.</strong> Intro</a></li><li class="chapter-item expanded "><a href="basics/index.html"><strong aria-hidden="true">2.</strong> Basics</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="basics/non_determinism.html"><strong aria-hidden="true">2.1.</strong> non_determinism</a></li><li class="chapter-item expanded "><a href="basics/delegations.html"><strong aria-hidden="true">2.2.</strong> delegations</a></li><li class="chapter-item expanded "><a href="basics/recursion.html"><strong aria-hidden="true">2.3.</strong> recursion</a></li><li class="chapter-item expanded "><a href="basics/field.html"><strong aria-hidden="true">2.4.</strong> field</a></li><li class="chapter-item expanded "><a href="basics/polynomials.html"><strong aria-hidden="true">2.5.</strong> polynomials</a></li><li class="chapter-item expanded "><a href="basics/trace.html"><strong aria-hidden="true">2.6.</strong> trace</a></li><li class="chapter-item expanded "><a href="basics/constraint.html"><strong aria-hidden="true">2.7.</strong> constraint</a></li><li class="chapter-item expanded "><a href="basics/memory.html"><strong aria-hidden="true">2.8.</strong> memory</a></li><li class="chapter-item expanded "><a href="basics/single_column_proof.html"><strong aria-hidden="true">2.9.</strong> single_column_proof</a></li></ol></li><li class="chapter-item expanded "><a href="advanced/index.html"><strong aria-hidden="true">3.</strong> Advanced</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="advanced/columns_memory.html"><strong aria-hidden="true">3.1.</strong> columns_memory</a></li><li class="chapter-item expanded "><a href="advanced/columns_setup.html"><strong aria-hidden="true">3.2.</strong> columns_setup</a></li><li class="chapter-item expanded "><a href="advanced/lookups_and_rangechecks.html"><strong aria-hidden="true">3.3.</strong> lookups_and_rangechecks</a></li><li class="chapter-item expanded "><a href="advanced/fri_query.html"><strong aria-hidden="true">3.4.</strong> fri_query</a></li><li class="chapter-item expanded "><a href="advanced/quotient.html"><strong aria-hidden="true">3.5.</strong> quotient</a></li></ol></li><li class="chapter-item expanded "><a href="code_walkthrough/index.html"><strong aria-hidden="true">4.</strong> Code Walkthough</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="code_walkthrough/prover_walkthrough.html"><strong aria-hidden="true">4.1.</strong> Prover</a></li><li class="chapter-item expanded "><a href="code_walkthrough/verifier_walkthrough.html"><strong aria-hidden="true">4.2.</strong> Verifier</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The book of Boojum 2.0</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="the-book-of-boojum-20"><a class="header" href="#the-book-of-boojum-20">The book of Boojum 2.0</a></h1>
+<p><img src="images/cover.png" alt="Cover" /></p>
+<p>How Boojum 2.0 turns programs into proofs.</p>
+<p>These docs are split into 3 parts:</p>
+<ul>
+<li>
+<p><a href="./basics/">Basics</a> - that cover basic concepts of math, proofs etc.</p>
+</li>
+<li>
+<p><a href="./advanced/">Advanced</a> - covering more complex topics, adding some impmementation details and caveats</p>
+</li>
+<li>
+<p><a href="./code_walkthrough/">Code Walkthough</a> - that looks at the code snippets of the actual boojum code.</p>
+</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="basics"><a class="header" href="#basics">Basics</a></h1>
+<p>This directory contains articles that introduce the proving system.</p>
+<p>The proving system is designed to verify the successful execution of user code compiled into RISC-V assembly. It does this by generating a short FRI proof along with the final register states that programs use to return final values.</p>
+<p>Its proof correctness can be quickly verified, and the verification time remains nearly constant regardless of the original code’s running time.</p>
+<p>Suggested order of reading:</p>
+<ul>
+<li>
+<p><a href="basics/./non_determinism.html">non_determinism</a> – How input and output work</p>
+</li>
+<li>
+<p><a href="basics/./delegations.html">delegations</a> – Learn how to call precompiles</p>
+</li>
+<li>
+<p><a href="basics/./recursion.html">recursion</a> – How we prove larger programs</p>
+</li>
+<li>
+<p><a href="basics/./field.html">field</a> – Basic math</p>
+</li>
+<li>
+<p><a href="basics/./polynomials.html">polynomials</a> – Basic info and tricks about polynomials</p>
+</li>
+<li>
+<p><a href="basics/./trace.html">trace</a> – How we form the execution trace</p>
+</li>
+<li>
+<p><a href="basics/./constraint.html">constraint</a> – Basic building blocks of proofs</p>
+</li>
+<li>
+<p><a href="basics/./memory.html">memory</a> – Insights into how memory access is represented</p>
+</li>
+<li>
+<p><a href="basics/./single_column_proof.html">single_column_proof</a> – Putting it all together</p>
+</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="non-determinism-aka-io"><a class="header" href="#non-determinism-aka-io">Non determinism a.k.a I/O</a></h1>
+<p>Most programs require some form of input and output, such as opening files or listening on network sockets.</p>
+<p>In boojum 2.0, all input/output operations are handled by reading from and writing to a special CSR register. We use register <code>0x7c0</code> (1984) for every I/O operation.</p>
+<p>Similarly, we manage delegations through designated delegation coprocessors, each associated with a unique register value (for example, <code>0x7c2</code> is used for blake32). More details are available on the <a href="basics/delegations.html">Delegations</a> page.</p>
+<h2 id="using-the-csr-register"><a class="header" href="#using-the-csr-register">Using the CSR Register</a></h2>
+<p>If a program needs to read external data, it must first indicate what to read by sending bytes to the CSR register using a helper method:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn csr_write_word(word: usize) {
+    unsafe {
+        core::arch::asm!(
+            "csrrw x0, 0x7c0, {rd}",
+            rd = in(reg) word,
+            options(nomem, nostack, preserves_flags)
+        )
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>This instruction is intercepted by the RISC-V simulator, which processes it (typically by invoking a specific "Oracle" that supplies the required data). Later, the program can retrieve the data by calling <code>csr_read_word</code>.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn csr_read_word() -&gt; u32 {
+    let mut output;
+    unsafe {
+        core::arch::asm!(
+            "csrrw {rd}, 0x7c0, x0",
+            rd = out(reg) output,
+            options(nomem, nostack, preserves_flags)
+        );
+    }
+
+    output
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Note – Since programs are deterministic, you can record all data supplied to the <code>csr_read_word</code>. Then, during verification, you no longer need to execute custom Oracle code; instead, you provide the recorded data stream (ignoring any data the program sends via <code>csr_write_word</code>).</p>
+<h2 id="final-outputs"><a class="header" href="#final-outputs">Final Outputs</a></h2>
+<p>It is crucial that a program returns its final outputs via registers, rather than writing them to the CSR.</p>
+<p>Typically, the program retrieves an expected output from input, then returns "1" in a register if it matches, or "0" if it does not.</p>
+<p>The final register values are propagated through all recursive steps, allowing the final caller to verify the result easily.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="delegations-also-known-as-precompiles-or-coprocessors"><a class="header" href="#delegations-also-known-as-precompiles-or-coprocessors">Delegations (also known as Precompiles or Coprocessors)</a></h1>
+<p>While most operations can be directly compiled into RISC-V assembly, some complex and frequently used operations may benefit from a custom circuit implementation. However, note that creating circuits is error-prone and can lead to higher maintenance costs. Today, we support around 3–4 delegations, which include:</p>
+<ul>
+<li>Blake hash function</li>
+<li>Poseidon hash function</li>
+<li>Ecrecover</li>
+<li>Big integer math operations</li>
+</ul>
+<h2 id="calling-a-delegation"><a class="header" href="#calling-a-delegation">Calling a Delegation</a></h2>
+<p>To invoke a precompile, you must call the correct CRS register. Each precompile is assigned a unique number; for example, Blake uses <code>0x7c1</code>.</p>
+<p>When you execute this assembly instruction, you need to provide the offset of the memory location for the input ABI structure. The structure of this ABI is specific to each precompile, so please refer to the respective documentation to determine the correct parameters. Any outputs from the precompile are written back to the same memory location.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn csr_trigger_delegation(offset: usize) {
+    debug_assert!(offset as u16 == 0);
+    unsafe {
+        core::arch::asm!(
+            "csrrw x0, 0x7c2, {rs}",
+            rs = in(reg) offset,
+            options(nostack, preserves_flags)
+        )
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="proving-delegations"><a class="header" href="#proving-delegations">Proving Delegations</a></h2>
+<p>Since each delegation involves a distinct circuit, separate proof files will be created for each one. These files may contain dozens or even hundreds of delegation calls, depending on the specific type. During verification—for instance, during recursive verification—the list of delegation calls from the main program trace is compared with the proven list in the delegation proofs.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="recursion-aka-proving-larger-programs"><a class="header" href="#recursion-aka-proving-larger-programs">Recursion a.k.a Proving Larger Programs</a></h1>
+<p>Currently, we can prove a circuit that has at most $2^{22}$ traces (cycles). This limitation means we need a different solution for longer programs.</p>
+<p>The idea is simple: run the entire program and split its execution trace into chunks of $2^{22}$. For each chunk, we also record the output state so that we can compare it with the input state of the next chunk.</p>
+<p>By doing this, we create several circuits that together represent the full computation.</p>
+<p>Next, we apply recursion. We run a new program that verifies all these proofs by checking that the outputs and inputs of consecutive circuits match.</p>
+<p>Then, we create a proof for this new program. If done correctly, this proof will require fewer cycles than the original, resulting in a smaller number of proofs.</p>
+<p>We can repeat this verification process—prove the verification, then prove that proof, and so on.</p>
+<p>After several iterations, we end up with a final proof that can be passed to our caller.</p>
+<h2 id="small-caveats"><a class="header" href="#small-caveats">Small Caveats</a></h2>
+<p>In practice, we also use precompiles (delegations) that generate their own set of proofs, which must be verified during the process.</p>
+<p>Thus, in the final step, we might need to run a slightly modified version of our circuit that does not use these delegations and possibly has a longer trace. This change ensures that the final proof is contained within a single file.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="fields-and-basic-concepts"><a class="header" href="#fields-and-basic-concepts">Fields and Basic Concepts</a></h1>
+<p>Boojum works on the Mersenne31 field — the natural numbers modulo the prime $p$, where $p = 2^{31} - 1$.</p>
+<p>Using this field means:</p>
+<ul>
+<li>To represent larger numbers (like u32), you need to use two separate elements.</li>
+<li>For safety, most entries in the field are assumed to be smaller than u16.</li>
+<li>For operations requiring more bits, we use <code>Mersenne31Complex</code> (holding 2 elements) and <code>Mersenne31Quartic</code> (holding 4 elements).</li>
+</ul>
+<h2 id="multiplicative-groups-in-fields--omega"><a class="header" href="#multiplicative-groups-in-fields--omega">Multiplicative Groups in Fields — Omega</a></h2>
+<p>In our documentation and code, you'll often see the symbol ω (omega). Here's a quick explanation.</p>
+<p>Consider a smaller field, such as modulo 17. If we pick the number 3 and multiply it by itself:</p>
+<pre><code>3^1 = 3
+3^2 = 9
+...
+3^16 = 1
+3^17 = 3 
+</code></pre>
+<p>Here, 3 is a generator of a multiplicative group of size 16 (which contains every element of the field except 0 — though this isn't always the case).</p>
+<p>Some interesting points:</p>
+<ul>
+<li>If 3 generates a group of size 16, then $3^2 = 9$ generates a group of size 8.</li>
+<li>Additionally, $9^2 mod 17 = 13$ generates a group of size 4:
+<pre><code>13^1 = 13
+13^2 = 16
+13^3 = 4
+13^4 = 1
+</code></pre>
+</li>
+<li>Note that multiple groups of size 4 exist. For example, multiplying the generator by the original generator 3 creates a new coset:
+<pre><code>3 * 13^1 = 5
+3 * 13^2 = 14
+3 * 13^3 = 12
+3 * 13^4 = 3
+</code></pre>
+</li>
+</ul>
+<p>These are called "cosets" and are used in our code for Low Degree Extensions.</p>
+<p>Visual examples are provided in the images below:</p>
+<p><img src="basics/../images/omega_3_generator.png" alt="Omega 3 Generator" /></p>
+<p><img src="basics/../images/omega_9_generator.png" alt="Omega 9 Generator" /></p>
+<p><img src="basics/../images/omega_9_coset.png" alt="Omega 9 Coset" /></p>
+<h2 id="why-mersenne-field"><a class="header" href="#why-mersenne-field">Why Mersenne Field?</a></h2>
+<p>Previously, we used the Goldilocks field ($p = 2^{64} − 2^{32} + 1$), known for its large multiplicative group with high 2-adicity (allowing the group size to be divisible by a large power of 2).</p>
+<p>However, the Mersenne field's multiplicative group only has a 2-adicity of 1. To overcome this limitation, most operations are performed on the <code>MersenneComplex</code> struct — an extension field (similar to complex numbers) with a multiplicative group size of $2^31$.</p>
+<p>For example, here is the generator for this group:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub const TWO_ADIC_GENERATOR: Self = Self {
+        c0: Mersenne31Field::new(311014874),
+        c1: Mersenne31Field::new(1584694829),
+};
+<span class="boring">}</span></code></pre></pre>
+<h2 id="why-multiplicative-groups"><a class="header" href="#why-multiplicative-groups">Why Multiplicative Groups?</a></h2>
+<p>Using multiplicative groups instead of direct field elements has its benefits, especially when computing "vanishing polynomials." For instance, consider the polynomial:</p>
+<p>$(x - a_0) * (x - a_1) * (x - a_2) * ... * (x - a_{8388607})$</p>
+<p>Expanding this would normally yield a polynomial with many coefficients. However, when using group generators, many terms cancel out.</p>
+<p>For a simple example, when 16 is the generator of a group of size 2 in modulo 17:</p>
+<pre><code>16^1 = 16
+16^2 = 1
+</code></pre>
+<p>Then,</p>
+<p>$(x - 16) * (x - 1) = x^2 - (16 + 1)x + 16 = x^2 - 1$</p>
+<p>Notice how most coefficients vanish, resulting in a cleaner polynomial. Similarly, with 3 as a generator for a group of size 16:</p>
+<p>$(x - 3) * (x - 9) * ... * (x - 1) = x^{16} - 1$</p>
+<p>This is the key benefit: using powers of ω as positions for the values a allows us to compute large polynomials quickly. This efficiency is crucial during proof verification.</p>
+<h2 id="why-2-adicity"><a class="header" href="#why-2-adicity">Why 2-adicity?</a></h2>
+<p>In FRI (Fast Reed-Solomon Interactive Oracle Proofs of Proximity), the polynomial is "folded," which reduces its degree by half. Because the sizes involved are powers of two, this process can be repeated many times, eventually resulting in a low-degree polynomial.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="polynomials"><a class="header" href="#polynomials">Polynomials</a></h1>
+<p>We usually represent polynomials using coefficients for each <strong>monomial</strong> term:</p>
+<p>$f(x) = a_0 + a_1 * x + a_2 * x^2 + ...$</p>
+<h2 id="lagrange-coefficients"><a class="header" href="#lagrange-coefficients">Lagrange Coefficients</a></h2>
+<p>Another way to define a polynomial of degree $n$ is by specifying its values at $n+1$ distinct points. For instance, a line (a degree 1 polynomial) requires two points.</p>
+<p>This method uses <strong>Lagrange</strong> coefficients. First, you pick a set of points (commonly the natural numbers: 1, 2, 3, etc). The polynomial is then written as:</p>
+<p>$f(x) = l_1(x) * val_1 + l_2(x) * val_2 + ...$</p>
+<p>Here, each $l_b(x)$ is a Lagrange polynomial that equals 1 at point $b$ and 0 at all the other chosen points.</p>
+<p>It is also possible to select a different set of points. One effective choice is using the powers of omega in the multiplicative group – see <a href="basics/field.html">Fields</a> for more details.</p>
+<h2 id="divisor-polynomials"><a class="header" href="#divisor-polynomials">Divisor Polynomials</a></h2>
+<p>If a polynomial is meant to be 0 at certain points (for example, $b_1, b_2$, etc), then it must be divisible by the polynomial $d(x) = (x-b_1) * (x-b_2) *  \ldots $.</p>
+<p>This ensures that the result of the division is another polynomial. This approach is often used to verify that certain constraints are satisfied. When you have a list of points where you expect the polynomial to equal 0, you construct this divisor polynomial and then prove (for example via FRI) that the quotient (which is the result $f(x) / d(x)$ ) is indeed forms a valid polynomial.</p>
+<h2 id="proving-a-value-of-a-polynomial"><a class="header" href="#proving-a-value-of-a-polynomial">Proving a Value of a Polynomial</a></h2>
+<p>Suppose someone asserts that for a polynomial $f(x)$, the value at point $z$ is $v$, i.e., $f(z) = v$. To check this claim, you can use a similar idea based on divisor polynomials.</p>
+<p>First, form the polynomial $h(x) = f(x) - v$. If the claim is correct, then $h(z) = 0$. This means that $h(x)$ should be divisible by $(x - z)$.</p>
+<p>Thus, you can ask for proof that $(f(x) - v)/(x - z)$ is a valid polynomial. This method is employed in several proofs, such as in the final DEEP-FRI verification, where it is used both to confirm that the DEEP polynomial is correctly formed and that its evaluation at point $z$ is accurate.</p>
+<h2 id="combining-polynomials"><a class="header" href="#combining-polynomials">Combining Polynomials</a></h2>
+<p>When $f(x)$ and $g(x)$ are polynomials of degree $d$, their linear combination (e.g., $f(x) + g(x)$ or $f(x)*17 + g(x)*33$) is also a polynomial of degree $d$.</p>
+<p>This is the strategy used to create the DEEP polynomial in proofs. By combining numerous polynomials using a random scalar $\alpha$ (and its powers), we can consolidate multiple proofs into a single verification of one polynomial.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="traces-columns-and-polynomials"><a class="header" href="#traces-columns-and-polynomials">Traces, Columns, and Polynomials</a></h1>
+<p>The term "trace" (short for execution trace) is central to this document. Essentially, it's a table where each row captures the values of various variables at a specific step in a program's execution.</p>
+<p>Imagine a program like this:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>1: for i in 1..5 {
+2:     a += i;
+3: }
+<span class="boring">}</span></code></pre></pre>
+<p>A corresponding trace might look like this:</p>
+<div class="table-wrapper"><table><thead><tr><th>timestamp</th><th>pc</th><th>i</th><th>a</th></tr></thead><tbody>
+<tr><td>0</td><td>0x01</td><td>1</td><td>0</td></tr>
+<tr><td>1</td><td>0x02</td><td>1</td><td>1</td></tr>
+<tr><td>2</td><td>0x01</td><td>2</td><td>1</td></tr>
+<tr><td>3</td><td>0x02</td><td>2</td><td>3</td></tr>
+<tr><td>4</td><td>0x01</td><td>3</td><td>3</td></tr>
+<tr><td>5</td><td>0x02</td><td>3</td><td>6</td></tr>
+</tbody></table>
+</div>
+<p>Note that we don't create a column for every program variable (since most don't change every step). Instead, we include columns for significant memory reads (from memory, registers, etc.) and for variables directly involved in execution (like the program counter).</p>
+<p>In practice, our programs include hundreds of columns.</p>
+<h2 id="setup-witness-memory-etc"><a class="header" href="#setup-witness-memory-etc">Setup, Witness, Memory, etc.</a></h2>
+<p>While each column represents a value, related columns are grouped for clarity—especially when multiple columns are updated during the same step of the proving process.</p>
+<ul>
+<li>Setup columns contain constants that define the circuit; these values remain the same regardless of the run.</li>
+<li>Memory columns record data read from memory, including ROM, RAM, and registers.</li>
+<li>Witness columns hold "generic" variables computed dynamically as memory columns are populated.</li>
+<li>Stage2 columns (also known as lookup helper and range check columns) store helper or temporary data needed to verify lookup correctness.</li>
+<li>Quotient columns gather data used to prove that all constraints are met.</li>
+<li>DEEP columns store the final polynomial, ensuring it is valid for the proof.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="constraints"><a class="header" href="#constraints">Constraints</a></h1>
+<p>Constraints form the core building block of the circuits (referred to as the "animals" in the ZK ELI5 book).</p>
+<p>Each constraint is defined as a polynomial equation that should equal 0 wherever the constraint applies. Typically, constraints involve variables (and constants) where each variable corresponds to a column in a trace table. In this table, every row represents the state of a variable at a specific time (i.e., during program execution).</p>
+<p>For most constraints, we assume they must hold true in every row except the last.</p>
+<h2 id="boolean-constraint"><a class="header" href="#boolean-constraint">Boolean Constraint</a></h2>
+<p>A Boolean constraint ensures that a variable can only have the value 0 or 1. If we represent the variable's column with the polynomial f, the constraint is expressed as:</p>
+<p>$f * (f - 1)$</p>
+<p>Notice that this equation evaluates to 0 only when f is either 0 or 1.</p>
+<h2 id="linear-and-quadratic-constraints"><a class="header" href="#linear-and-quadratic-constraints">Linear and Quadratic Constraints</a></h2>
+<p>Also known as degree 1 (linear) or degree 2 (quadratic) constraints, these generally take the form:</p>
+<p>$c_0 + c1_1 * var_1 + c1_2 * var_2 + c2_1 * var_3 * var_4 = 0$</p>
+<p>By definition, the value of this equation should always equal 0.</p>
+<h2 id="public-inputs"><a class="header" href="#public-inputs">Public Inputs</a></h2>
+<p>This constraint type ensures that a specific variable (or column) matches a given public input value. However, it only applies in certain rows (typically the first or last), since it doesn't make sense for the column to equal the public input in all rows.</p>
+<p>This is defined in the code using an enum:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub enum BoundaryConstraintLocation {
+    FirstRow,
+    LastRow,
+    OneBeforeLastRow,
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Here, the constraint polynomial simply checks that the column equals the public input:</p>
+<p>$f(x) - {publicInput}$</p>
+<p>The vanishing polynomial then takes care of ensuring this check is only applied on the selected rows.</p>
+<h2 id="state-linkage-constraints"><a class="header" href="#state-linkage-constraints">State Linkage Constraints</a></h2>
+<p>Unlike the previous constraints that operate on the same row, state linkage constraints ensure consistency between consecutive rows. They verify that the value in column A of row X matches the value in column B of row X+1.</p>
+<p>Because of the way rows are mapped to polynomial values, this is equivalent to verifying:</p>
+<p>  
+$f_a(x) - f_b(x * ω) == 0$</p>
+<p>This check is typically applied only on selected rows (skipping the last two rows).</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="memory-and-registers"><a class="header" href="#memory-and-registers">Memory and Registers</a></h1>
+<p>In this article, we'll explain memory and register access, which is used in nearly every execution step.</p>
+<p>Consider the following code:</p>
+<pre><code class="language-asm">add r2, r0, r0
+add r2, r2, 5
+add r3, r2, 7
+</code></pre>
+<p>In each step, you add a constant to register 2. How should this be captured in our trace?</p>
+<p>Take the middle step as an example. What happens is:</p>
+<ul>
+<li>The value 0 is read from register 2.</li>
+<li>5 is added to it.</li>
+<li>The result, 5, is written back into register 2.</li>
+</ul>
+<p>This sequence will be reflected in the trace. We know that each step can have up to three memory/register interactions (two reads and one write). Thus, the code will be recorded in the trace as:</p>
+<div class="table-wrapper"><table><thead><tr><th>Timestamp</th><th>Read Address</th><th>Read Value</th><th>Last Written Timestamp</th><th>Write Value</th><th>Read Address</th><th>Read Value</th><th>Last Written Timestamp</th><th>Write Value</th></tr></thead><tbody>
+<tr><td>4</td><td>r0</td><td>0</td><td>0</td><td>0</td><td>r2</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td>8</td><td>r2</td><td>0</td><td>5</td><td>0</td><td>r2</td><td>0</td><td>8</td><td>5</td></tr>
+<tr><td>12</td><td>r2</td><td>5</td><td>9</td><td>5</td><td>r3</td><td>0</td><td>0</td><td>12</td></tr>
+</tbody></table>
+</div>
+<p>To simplify things later, we treat each read operation like a write, ensuring that we write back the same value. So each operation is represented as a tuple:</p>
+<pre><code>(read_address, last_written_timestamp, read_value, current_timestamp, written_value)
+</code></pre>
+<p>But how do we prove that all memory and register accesses were performed correctly? We use the following method.</p>
+<p>Each operation is split into two parts:</p>
+<ol>
+<li>(read_address, last_written_timestamp, read_value)</li>
+<li>(read_address, current_timestamp, written_value)</li>
+</ol>
+<p>Additionally, we include "boundary" values:</p>
+<ul>
+<li>For initialization — all entries are "(read_address, 0, 0)"</li>
+<li>For teardown — all entries are "(read_address, last_written_timestamp, last_value)"</li>
+</ul>
+<h2 id="proving-consistency"><a class="header" href="#proving-consistency">Proving Consistency</a></h2>
+<p>If you inspect the process, you'll notice that if the set of operations from the initialization plus teardown matches the set from the read and write stages, it means every memory and register access is consistent.</p>
+<p>This works because every write has a unique timestamp. For each value written, there should be a corresponding read where the "last_written_timestamp" exactly matches the write's timestamp.</p>
+<p>To verify that both sets are identical, we multiply all the elements from the first group (with an added random $\alpha$) and compare it to the multiplication of all elements from the second group. If the final results are the same, the sets match.</p>
+<h2 id="in-our-example"><a class="header" href="#in-our-example">In our example</a></h2>
+<p>Read tuples would be (address, read value, last written timestamp):</p>
+<pre><code>// From first row
+(r0, 0, 0)
+(r2, 0, 0)
+// From second row
+(r2, 0, 5)
+(r2, 0, 8)
+// From third row
+(r2, 5, 9)
+(r3, 0, 0)
+</code></pre>
+<p>Write tuples would be (address, write value, timestamp):</p>
+<pre><code>// From first row
+(r0, 0, 4)
+(r2, 0, 5)
+// From second row
+(r2, 0, 8)
+(r2, 5, 9)
+// From third row
+(r2, 5, 12)
+(r3, 12, 13)
+</code></pre>
+<p>And init tuples:</p>
+<pre><code>(r0, 0, 0)
+(r2, 0, 0)
+(r3, 0, 0)
+</code></pre>
+<p>And teardown tuples (final values):</p>
+<pre><code>(r0, 0, 4)
+(r2, 5, 12)
+(r3, 12, 13)
+</code></pre>
+<p>And it left to the reader to check that reads + teardown == writes + init.</p>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="single-column-proof"><a class="header" href="#single-column-proof">Single column proof</a></h2>
+<p>Let's examine a single column. We start with a column that should only contain boolean values.</p>
+<p>The prover asserts that the column contains exclusively 0 and 1 values.</p>
+<p>We then ask the prover to create a polynomial over these values (f) such that $f(\omega) = col[0]$, $f(omega^2) = col[1]$, etc.</p>
+<p>For now, let's assume the prover is honest about how the polynomial is computed (we will address potential dishonesty later).</p>
+<p>Given this assumption, how can we verify that all the values are indeed 0 or 1?</p>
+<p>First, we ask the prover to compute the polynomial $g(x) = f(x) * (f(x)-1)$. Notice that if $f(x)$ truly only takes the values 0 or 1 at the points $\omega$, then $g(x)$ will be 0 at those points.</p>
+<p>This implies that all these points are roots of the polynomial, so it can be factored as: $g(x) = (x-\omega) * (x-\omega^2)<em>...</em>(x-\omega^{n-1})*q(x)$ , where $q(x)$ is the remainder.</p>
+<p>It is important to note that because we selected these special points $\omega$, the product $(x-\omega)*(x-\omega^2)...$ simplifies to $(x^N-1)$.</p>
+<p>Thus, we need to show that the polynomial $g(x) = (x^N-1)*q(x)$, or equivalently:</p>
+<p>$q(x) = g(x) / (x^n - 1)$</p>
+<p>We then verify that $q(x)$ is indeed a polynomial using fri queries as explained in <a href="basics/fri_query.html">fri_query.md</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="advanced-topics"><a class="header" href="#advanced-topics">Advanced Topics</a></h1>
+<p>Explore the deeper details of how boojum 2.0 works through these advanced topics.</p>
+<p>Suggested reading order:</p>
+<ul>
+<li><a href="advanced/columns_memory.html">columns_memory</a> – Understand how memory columns and timestamps are represented.</li>
+<li><a href="advanced/columns_setup.html">columns_setup</a> – Learn how setup columns are created.</li>
+<li><a href="advanced/lookups_and_rangechecks.html">lookups_and_rangechecks</a> – Discover the inner workings of lookups.</li>
+<li><a href="advanced/fri_query.html">fri_query</a> – Dive into the details of FRI folding.</li>
+<li><a href="advanced/quotient.html">quotient</a> – See how we build a quotient polynomial that covers all the constraints.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="memory-columns"><a class="header" href="#memory-columns">Memory Columns</a></h1>
+<p>Before reading this section, please review the <a href="advanced/../basics/memory.html">Basic Memory</a> guide to understand memory operations and consistency checks.</p>
+<h2 id="columns"><a class="header" href="#columns">Columns</a></h2>
+<p>Memory columns store three types of information within <code>MemorySubtree</code>:</p>
+<ul>
+<li>Memory accesses (both reads and writes to RAM and registers) are recorded using <code>ShuffleRamQueryColumns</code>.</li>
+<li>Initial and final values (refer to the basic memory documentation for details) are maintained with <code>ShuffleRamInitAndTeardownLayout</code>.</li>
+<li>Delegation requests and processors are managed by <code>DelegationRequestLayout</code> for delegation processor calls.</li>
+<li>Additional data for batched_ram_accesses and register_and_indirect_accesses, which help improve circuit access speed to memory and registers.</li>
+</ul>
+<h2 id="timestamps"><a class="header" href="#timestamps">Timestamps</a></h2>
+<p>You'll notice that these columns do not include a "write timestamp" field. This is because the timestamp comes from the setup columns—in some cases, it isn’t even necessary (for example, in riscV, where the timestamp is directly derived from the row number).</p>
+<p>A notable feature is that for each row, the timestamp increments by 4 (so row 0 has a timestamp of 4, row 1 has 8, etc.). This works because the maximum number of memory accesses per cycle is limited to 4, ensuring that each access within a row receives a distinct timestamp.</p>
+<p>For instance, in the first row, the first memory access gets timestamp 0, the second gets timestamp 1, and so on. In the next row, the first access gets timestamp 4, the next gets timestamp 5, etc. This method guarantees that each memory write is uniquely timestamped, even if the same memory address is read multiple times within a single cycle.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="setup-columns"><a class="header" href="#setup-columns">Setup Columns</a></h1>
+<p>Setup columns act like constants: their values are established during circuit "compilation" time and remain unchanged during execution.</p>
+<p>Currently, there are three types of setup columns:</p>
+<ul>
+<li>Timestamps</li>
+<li>Range check 16</li>
+<li>Generic lookups</li>
+</ul>
+<p>These columns are populated during circuit compilation in the SetupPrecomputations stage.</p>
+<h2 id="timestamps-1"><a class="header" href="#timestamps-1">Timestamps</a></h2>
+<p>The Timestamp column has a size of 2 and increases with each row. (It has size 2 since our circuits can handle up to 2^24 rows, and for simplicity we treat the timestamp as u32.)</p>
+<p>For each row, the timestamp typically increases by multiples of 4 (e.g., the first row has a timestamp of 0, the second 4, and so on). This increment is controlled by <code>NUM_EMPTY_BITS_FOR_RAM_TIMESTAMP</code>. Using multiples of 4 allows us to timestamp up to 4 memory accesses within a single step uniquely.</p>
+<p>An optimization exists: if timestamp shuffling is not required, the column is not created implicitly. This is generally acceptable for the main RISC-V circuit, where the timestamp is increased in every step. However, for delegation circuits— which process delegations arriving at different timestamps— the columns must be explicitly included.</p>
+<h2 id="generic-lookups"><a class="header" href="#generic-lookups">Generic Lookups</a></h2>
+<p>These columns store all elements from lookup tables. Each set of columns is sized to 4, which is the maximum size for a single lookup table entry (3 columns for data, with the last column used for the lookup table id).</p>
+<p>If the number of lookup entries exceeds the number of rows, additional copies of these columns may be created so that all elements fit.</p>
+<h2 id="range-check"><a class="header" href="#range-check">Range Check</a></h2>
+<p>A single column is used to store every value in the range $0 .. 2^{16}$. We use many u16 checks since u32 values don’t fit our field, and we assume that the highest value in any cell is a u16.</p>
+<p>Because a u16 check only requires one column—and because there’s no need to store an extra column with a table id—it is more efficient to use a single column instead of the four that would be necessary if combined with the generic lookups.</p>
+<h2 id="example-trace-table"><a class="header" href="#example-trace-table">Example Trace Table</a></h2>
+<p>Below is an example trace table. The table includes the timestamp (represented as a single column), a u16 range check, and generic lookups (illustrated by an XOR operation with table_id = 5):</p>
+<div class="table-wrapper"><table><thead><tr><th>Timestamp</th><th>Range Check</th><th>Generic 1</th><th>Generic 2</th><th>Generic 3</th><th>Generic 4</th></tr></thead><tbody>
+<tr><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>5</td></tr>
+<tr><td>4</td><td>1</td><td>1</td><td>2</td><td>3</td><td>5</td></tr>
+<tr><td>8</td><td>2</td><td>2</td><td>0</td><td>2</td><td>5</td></tr>
+<tr><td>12</td><td>3</td><td>3</td><td>4</td><td>7</td><td>5</td></tr>
+<tr><td>16</td><td>4</td><td>4</td><td>5</td><td>1</td><td>5</td></tr>
+<tr><td>20</td><td>5</td><td>5</td><td>6</td><td>3</td><td>5</td></tr>
+</tbody></table>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="lookups-and-range-checks"><a class="header" href="#lookups-and-range-checks">Lookups and Range Checks</a></h1>
+<p>Often in circuits, you need to verify an inequality—for instance, that a given value fits in a u16. Regular constraints work well for equality checks, but not so much for proving the opposite condition. We solve this by using lookup tables.</p>
+<p>For example, if you need to ensure that $x &lt; 2^{16}$, you can create a table of all values from 0 to 65535. Then, by proving that x matches one of those entries, you effectively confirm the inequality.</p>
+<p>Lookup tables are also useful for demonstrating the results of operations like XOR or hashing. Some operations are difficult to define as code but simple to represent in a table that maps possible inputs to outputs. In boojum 2.0, there are around 40 different tables (see <code>enum TableType</code>) covering a range of functions—from binary operations like OR and XOR to power of 2 calculations and bit-specific range checks.</p>
+<p>While adding a new table to the circuit can be costly (because all its values must be inlined into the main trace table, specifically into the setup columns), it is sometimes necessary.</p>
+<h2 id="step-1---adding-a-table"><a class="header" href="#step-1---adding-a-table">Step 1 - Adding a Table</a></h2>
+<p>If your circuit requires a particular lookup table, it must be enabled in the table driver. This ensures that during circuit compilation, all the elements from the table will be incorporated into the setup columns (specifically into generic_lookup_columns).</p>
+<h2 id="step-2---multiplicities-table"><a class="header" href="#step-2---multiplicities-table">Step 2 - Multiplicities Table</a></h2>
+<p>Each generic lookup column in the setup table will have a corresponding "multiplicities" column in the witness trace. This column tracks the number of times each table entry is accessed during the circuit’s execution.</p>
+<h2 id="step-3---lookup-column"><a class="header" href="#step-3---lookup-column">Step 3 - Lookup Column</a></h2>
+<p>Lastly, the witness table will include several lookup columns. These are where the values, which will be verified against the lookup tables, are placed.</p>
+<h2 id="putting-it-all-together"><a class="header" href="#putting-it-all-together">Putting It All Together</a></h2>
+<p>For simplicity, assume that the lookup table has a width of 1 (although in practice, they usually have a width of 3 columns plus an additional column for the table ID).</p>
+<p>This means that, for example, the 3rd column in the setup trace will contain all the table elements. The 7th column in the witness trace will hold the multiplicities, and the 15th column will contain the values that must match an entry in the table.</p>
+<p>Imagine you have a lookup table containing only even numbers. The table might look like this (note that multiplicities and values are filled during witness generation):</p>
+<div class="table-wrapper"><table><thead><tr><th>setup</th><th>multiplicities</th><th>values</th></tr></thead><tbody>
+<tr><td>0</td><td>1</td><td>2</td></tr>
+<tr><td>2</td><td>3</td><td>2</td></tr>
+<tr><td>4</td><td>1</td><td>0</td></tr>
+<tr><td>6</td><td>0</td><td>4</td></tr>
+<tr><td>8</td><td>0</td><td>2</td></tr>
+</tbody></table>
+</div>
+<p>To prove the validity of the lookup, you will compare multisets using a grand product:</p>
+<p>$\Pi_x  (setup[x] + \gamma) ^ {mult[x]}  == \Pi_x (values[x] + \gamma)$</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="fri-query"><a class="header" href="#fri-query">Fri query</a></h1>
+<p>The goal of FRI folding is to prove that a given function $f(x)$ is a polynomial of some degree.</p>
+<h2 id="how"><a class="header" href="#how">How</a></h2>
+<p>The main idea of FRI is to take a function $f$, which is intended to be a polynomial of degree $d$, and "fold" it into another function $g$ that is a polynomial of degree $d/2$. By repeating this process several times, we eventually reduce the polynomial to a low degree (even as low as degree 1) where the coefficients can be directly verified.</p>
+<p>Typically, we start with polynomials of degrees around $2^{20}$, $2^{22}$, and so on. Without FRI, we would need to include all these coefficients in a proof, making the proof very large and the verification process slow.</p>
+<h2 id="query"><a class="header" href="#query">Query</a></h2>
+<p>To prove that the folding was performed correctly, the prover creates a Merkle tree of all the evaluations of the polynomial at every point (including the additional coset domains—see <a href="advanced/lde.html">LDE</a> for more details). The prover also provides the coefficients of the final "folded" polynomial, which is usually a short list (for instance, if we end up with a degree 4 polynomial, only 5 coefficients are needed).</p>
+<p>For each query, the verifier (or, in non-interactive proofs, the prover using randomness and Fiat-Shamir) selects a starting point $c$ and a coefficient $\alpha$. The evolution of the values at point $c$ is then demonstrated through successive folding steps, ending with the final polynomial. At one point in the process, the final value must match the value obtained by applying the final coefficients directly.</p>
+<p>Since this verification is repeated for multiple queries using various starting points (including points on the LDE), even a single error in the folding procedure would cause one of the proofs to fail. It is estimated that each FRI query contributes roughly 2 bits of security.</p>
+<h2 id="batched-folding"><a class="header" href="#batched-folding">Batched folding</a></h2>
+<p>In our implementation, we have optimized several steps to speed up the process.</p>
+<p>For instance, the naive method of a 2x folding from degree 24 to degree 6 would require 18 steps. Instead, we perform approximately 5 steps by employing 8x to 16x foldings. The specific mappings are described in the <code>OPTIMAL_FOLDING_PROPERTIES</code> struct, and the code in <code>fri_fold_by_log_n</code> uses the $N$ parameter to specify the folding amount in each step.</p>
+<h2 id="folding-degree-2-details"><a class="header" href="#folding-degree-2-details">Folding degree 2 details</a></h2>
+<p>Let’s explain the simple case of 2x folding, before moving on to more optimized approaches.</p>
+<p>Suppose we have a polynomial $f$ that we wish to fold:</p>
+<p>$f(x) = 4x^4 + 3x^3 + 2x^2 + 5x + 7$</p>
+<p>Conceptually, we split the polynomial into two parts: one for even and one for odd powers:</p>
+<p>$even(x) = (f(x) + f(-x))/2 = 4x^4 + 2x^2 + 7$</p>
+<p>$odd(x) = (f(x) - f(-x))/2 = 3x^3 + 5x$</p>
+<p>We then define a new function $g()$ as follows:</p>
+<p>$g(x^2) = even(x) + odd(x)/x = (f(x) + f(-x))/2 + (f(x) - f(-x))/(2x)$</p>
+<p>Which simplifies to:</p>
+<p>$g(x^2) = 4x^4 + (3+2)x^2 + (7+5)$</p>
+<p>Thus, we can write $g$ as:</p>
+<p>$g(x) = 4x^2 + 5x + 12$</p>
+<p>This shows that if $f$ is a polynomial of degree 4, the transformation results in $g$ being a degree 2 polynomial.</p>
+<p>The key advantage is that to compute $g(x^2)$, only the values $f(x)$ and $f(-x)$ are needed. Although the example simply adds the even and odd parts, the process remains valid even when one of them is multiplied by a random challenge, which is commonly done in practice.</p>
+<p>The following code snippet from <code>fri_folding</code> illustrates this process:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let mut folded = *a;
+folded.sub_assign(b);
+folded.mul_assign_by_base(root);
+folded.mul_assign(&amp;challenge);
+folded.add_assign(a);
+folded.add_assign(b);
+
+*output_buffer.get_unchecked_mut(i) = folded;
+<span class="boring">}</span></code></pre></pre>
+<p>Here, $a$ represents $f(x)$, $b$ represents $f(-x)$, and $root$ is the $1/x$ value.</p>
+<h2 id="final-monomial-check"><a class="header" href="#final-monomial-check">Final monomial check</a></h2>
+<p>After all the folding steps are complete, we obtain a purported low-degree polynomial whose coefficients can be directly provided. A final check is then performed to ensure that the value traced from the leaf in the Merkle tree matches the value computed from this polynomial at the evaluation point.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="what-is-quotient"><a class="header" href="#what-is-quotient">What is quotient?</a></h1>
+<p>Circuit computations typically involve numerous constraints (boolean, quadratic, lookup-based). For more on constraints, please refer to <a href="advanced/../basics/constraint.html">constraint</a>.</p>
+<p>For example, the <a href="advanced/../basics/single_column_proof.html">single column</a> document shows how to verify a single (boolean in this case) constraint using an FRI proof. In circuits, there might be thousands of constraints, so rather than handling them one by one, we combine them into a single <code>quotient</code> polynomial.</p>
+<h2 id="constraint"><a class="header" href="#constraint">Constraint</a></h2>
+<p>Each constraint usually has two parts:</p>
+<ul>
+<li>A method to construct a polynomial that equates to 0 at the required points.</li>
+<li>A specification of the points where it should hold.</li>
+</ul>
+<p>For instance:</p>
+<ul>
+<li>Many constraints apply to all rows except the last.</li>
+<li>Public input constraints might only apply to the first row.</li>
+<li>Some checking constraints may only be relevant for the last row.</li>
+</ul>
+<p>The overall idea is to merge these constraints, which take the form $contrib(x) / matching(x)$, into one expression.</p>
+<h3 id="contrib-function"><a class="header" href="#contrib-function">Contrib function</a></h3>
+<p>This function depends on the type of constraint. For a simple boolean constraint, it would be $f(x) * (f(x)-1)$. For a linear constraint stating that the 5th witness column multiplied by 5 should equal 3, it would be $witness_5(x)*5 - 3$. The key is that if the constraint holds, this function will equal 0 at that point.</p>
+<h3 id="matching-function-aka-divisor"><a class="header" href="#matching-function-aka-divisor">Matching function (a.k.a divisor)</a></h3>
+<p>The matching function determines at which points a constraint applies. For example:</p>
+<ul>
+<li>If a constraint should only apply in the 10th row, the matching function is $(x-\omega^{10})$, since the 10th row corresponds to $\omega^{10}$ in the polynomial.</li>
+<li>If a constraint applies to both the 5th and 10th rows, the matching function is $(x-\omega^{5})*(x-\omega^{10})$.</li>
+<li>If a constraint should apply to all rows, the matching function would be $(x-\omega^{0} ) * (x - \omega^{1})* ... = (x^N - 1)$ - and this is the real reason why we picked $\omega$ - as this huge constrain nicely folds into short polynomial. See <a href="advanced/../basics/polynomials.html">polynomial basics</a> for more info.</li>
+<li>If it should apply to all rows except the first, it becomes $(x^N - 1) / (x - 1)$.</li>
+</ul>
+<h2 id="putting-them-together"><a class="header" href="#putting-them-together">Putting them together</a></h2>
+<p>Once we have the constraints and their corresponding divisors, they are combined into a single polynomial. Demonstrating the existence of this quotient polynomial proves that all components of the combined expression are valid polynomials and that the constraints hold for their respective rows. For details, see <a href="advanced/../basics/single_column.html">single_column</a>.</p>
+<p>To create this combined polynomial, we use two random values: $\alpha$ and $\beta$. These values are randomly selected based on a hash from the full trace. We proceed as follows:</p>
+<ol>
+<li>
+<p>Collect all constraints that apply to all rows and multiply each by increasing powers of $\alpha$. Then, apply the common divisor:</p>
+<p>$all_rows(x) = (\sum_i contrib_i(x) * \alpha^i) / allRowsDivisor(x)$</p>
+</li>
+<li>
+<p>A similar method is applied to constraints that only cover the first row, all rows except the first, etc. (typically around 6 combinations in total).</p>
+</li>
+<li>
+<p>The final quotient is the sum of these terms, each weighted by powers of $\beta$:</p>
+<p>$quotient(x) = allRows(x) + firstRow(x) * \beta + exceptLast(x) * \beta^2 + ...$</p>
+</li>
+</ol>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>The quotient polynomial extends the approach presented in <a href="advanced/../basics/single_column_proof.html">single_column</a> by incorporating all constraints simultaneously. If we can prove that the quotient is a valid polynomial, it confirms that all individual parts are also polynomials, thereby ensuring that the constraints hold on their designated rows.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="code-walkthrough"><a class="header" href="#code-walkthrough">Code walkthrough</a></h1>
+<p><img src="code_walkthrough/../images/boojum_stages.png" alt="Stages" /></p>
+<p>This directory contains articles that offer a deeper look into the code - showing the exact step-by-step behavior together with code examples and code pointers.</p>
+<ul>
+<li><a href="code_walkthrough/./prover_walkthrough.html">Prover</a> – Covers the details of how we create FRI proofs.</li>
+<li><a href="code_walkthrough/./verifier_walkthrough.html">Verifier</a> - Covers the verifier code.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="prover-walkthrough"><a class="header" href="#prover-walkthrough">Prover Walkthrough</a></h1>
+<p>The goal of this article is to explain how the boojum prover works from end to end. The content uses simplified code snippets with function names intact, while hiding some parameters for readability.</p>
+<hr />
+<p>Whole journey starts here:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn prove_image_execution(
+    bytecode: &amp;[u32],
+    non_determinism: ND,
+    risc_v_circuit_precomputations: &amp;MainCircuitPrecomputations&lt;A&gt;,
+) -&gt; (Vec&lt;Proof&gt;, Vec&lt;FinalRegisterValue&gt;)
+<span class="boring">}</span></code></pre></pre>
+<p>We pass the bytecode of the program, non-determinism (a.k.a. IO; see <a href="code_walkthrough/../basics/non_determinism.html">how io works</a>), and the compiled circuit with some precomputed static data. The function returns a list of proofs because the program could run long enough to span multiple circuits. If there are too many proofs, recursion can be applied to combine them (see <a href="code_walkthrough/../basics/recursion.html">recursion</a> for more info).</p>
+<hr />
+<p>The process begins with executing the program and writing down state changes into the witness:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>    let (final_pc, final_register_values, main_circuits_witness, delegation_circuits_witness) =
+        run_and_split_in_default_configuration::&lt;ND, C&gt;(
+            max_cycles_to_run,
+            bytecode,
+            &amp;mut non_determinism,
+            worker,
+        );
+<span class="boring">}</span></code></pre></pre>
+<p>Here, <code>main_circuits_witness</code> holds a vector of <code>RiscVCircuitWitnessChunk</code>, each representing what happened during a single circuit run (typically around $2^{22}$ steps).</p>
+<p>Next, memory accesses are processed by constructing a tree. The resulting final hash will be used to generate a "commitment":</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>for circtuit in main_circuits_witness {
+    let (caps, aux_data) = commit_memory_tree_for_riscv_circuit(..);
+    memory_trees.push(caps);
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Together with the setup columns’ hash, these are used to generate initial seeds:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let memory_challenges_seed = fs_transform_for_memory_and_delegation_arguments(
+    &amp;setup_caps,
+    &amp;final_register_values,
+    &amp;memory_trees,
+    &amp;delegation_memory_trees,
+);
+let external_challenges =
+    ExternalChallenges::draw_from_transcript_seed(memory_challenges_seed, true);
+<span class="boring">}</span></code></pre></pre>
+<p>These external challenges add randomness inside the prover to improve security.</p>
+<hr />
+<h2 id="evaluate-witness"><a class="header" href="#evaluate-witness">Evaluate Witness</a></h2>
+<p>The next step is to prepare a trace (table) with both witness and memory columns. This table is a matrix where each row represents a single execution step. Data from the circuit is organized into readable columns.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let witness_trace = evaluate_witness(
+    &amp;risc_v_circuit_precomputations.compiled_circuit,
+    cycles_per_circuit,
+    &amp;oracle,
+    &amp;witness_chunk
+        .shuffle_ram_inits_and_teardowns
+        .lazy_init_values,
+    &amp;witness_chunk
+        .shuffle_ram_inits_and_teardowns
+        .lazy_teardown_values_and_timestamps,
+    &amp;risc_v_circuit_precomputations.table_driver,
+    circuit_sequence,
+    worker,
+    A::default(),
+);
+<span class="boring">}</span></code></pre></pre>
+<p>Internally, the evaluation function processes each row (often in parallel threads) and works in roughly three stages:</p>
+<ul>
+<li><strong>Static work:</strong> Filling in columns with fixed values (e.g., memory access, oracle answers) via <code>evaluate_witness_inner_static_work</code>.</li>
+<li><strong>Dynamic work:</strong> Computing outputs based on other variable values using custom functions in <code>evaluate_witness_inner_witness_generation_functions_work</code>.</li>
+<li><strong>Final derived columns:</strong> These are computed for lookups, range checks, etc., using <code>count_multiplicities</code>.</li>
+</ul>
+<p>After completing this stage, the witness and memory columns are fully populated, and the process moves on to stage 1.</p>
+<hr />
+<h2 id="prove"><a class="header" href="#prove">Prove</a></h2>
+<p>The proving phase begins with a function that accepts numerous arguments; however, the key parameters are the compiled circuit (which contains the setup columns) and the witness evaluation data (which includes the witness and memory columns):</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn prove&lt;const N: usize, A: GoodAllocator&gt;(
+    compiled_circuit: &amp;CompiledCircuitArtifact&lt;Mersenne31Field&gt;,
+    public_inputs: &amp;[Mersenne31Field],
+    external_values: &amp;ExternalValues,
+    witness_eval_data: WitnessEvaluationData&lt;N, A&gt;,
+    setup_precomputations: &amp;SetupPrecomputations&lt;N, A, DefaultTreeConstructor&gt;,
+    precomputations: &amp;Twiddles&lt;Mersenne31Complex, A&gt;,
+    lde_precomputations: &amp;LdePrecomputations&lt;A&gt;,
+    circuit_sequence: usize,
+    delegation_processing_type: Option&lt;u16&gt;,
+    lde_factor: usize,
+    _tree_cap_size: usize,
+    num_queries: usize,
+    pow_bits: u32,
+    worker: &amp;Worker,
+) -&gt; (ProverData&lt;N, A, DefaultTreeConstructor&gt;, Proof) {
+<span class="boring">}</span></code></pre></pre>
+<p>The first action is to collect <code>transcript</code> data, which helps initialize an additional randomness seed:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>    let mut transcript_input = vec![];
+    transcript_input.push(circuit_sequence as u32);
+    transcrpit_input.push(...);
+<span class="boring">}</span></code></pre></pre>
+<p>Before completing the transcript, stage 1 is performed.</p>
+<hr />
+<h3 id="stage-1"><a class="header" href="#stage-1">Stage 1</a></h3>
+<p>Stage 1’s goal is to create LDEs (Low Degree Extensions) for the main memory and witness trace, and then build trees over these LDEs. For more details on LDE, see <a href="code_walkthrough/../basics/field.html">field</a>.</p>
+<p><code>prover_stage_1</code> creates an LDE for all elements of the trace and splits the columns into separate Merkle trees for memory and witness data.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub struct FirstStageOutput&lt;const N: usize, A: GoodAllocator, T: MerkleTreeConstructor&gt; {
+    pub ldes: Vec&lt;CosetBoundTracePart&lt;N, A&gt;&gt;,
+    pub num_witness_columns: usize,
+    pub witness_tree: Vec&lt;T&gt;,
+    pub memory_tree: Vec&lt;T&gt;,
+}
+<span class="boring">}</span></code></pre></pre>
+<p>When stage 1 completes, the tree hashes are added to the transcript so future random variables depend on the LDE values.</p>
+<hr />
+<h3 id="stage-2"><a class="header" href="#stage-2">Stage 2</a></h3>
+<p>The objective of stage 2 is to compute additional columns, known as stage2 columns (see <code>LookupAndMemoryArgumentLayout</code> for the full list). These columns include polynomials for lookups, range checks, and memory access.</p>
+<p>In stage 2, the process is repeated over existing columns to identify memory and range checks and to populate the new columns. Many of these have nominators and denominators—for example, each memory read adds a nominator and each write adds a denominator. The overall sum should equal 1.</p>
+<p>After the <code>stage2_trace</code> is fully constructed, an LDE and corresponding subtrees are computed for these new columns. The complete data is packaged into:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub struct SecondStageOutput&lt;const N: usize, A: GoodAllocator, T: MerkleTreeConstructor&gt; {
+    // LDEs of second stage table, that contains different contributions, accumulators etc.
+    pub ldes: Vec&lt;CosetBoundTracePart&lt;N, A&gt;&gt;,
+    // Trees based off the LDEs columns.
+    pub trees: Vec&lt;T&gt;,
+    // Challenges used for the linearization
+    pub lookup_argument_linearization_challenges:
+        [Mersenne31Quartic; NUM_LOOKUP_ARGUMENT_KEY_PARTS - 1],
+    // gamma used for the contributions
+    pub lookup_argument_gamma: Mersenne31Quartic,
+    // grand product of all the memory accesses
+    pub grand_product_accumulator: Mersenne31Quartic,
+    // sum of all the delegations &amp; processed ones.
+    pub sum_over_delegation_poly: Mersenne31Quartic,
+}
+<span class="boring">}</span></code></pre></pre>
+<hr />
+<h3 id="stage-3"><a class="header" href="#stage-3">Stage 3</a></h3>
+<p>Stage 3 involves computing the quotient polynomial, which combines all constraints from earlier stages. For details on the math, see <a href="code_walkthrough/../advanced/quotient.html">What is quotient</a>. Here, a random seed is used to generate the parameters $\alpha$ and $\beta$, then the quotient polynomial is created. The output is a trace with four columns, accompanied by its LDE and trees.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub struct ThirdStageOutput&lt;const N: usize, A: GoodAllocator, T: MerkleTreeConstructor&gt; {
+    pub quotient_alpha: Mersenne31Quartic,
+    pub quotient_beta: Mersenne31Quartic,
+    pub ldes: Vec&lt;CosetBoundTracePart&lt;N, A&gt;&gt;,
+    pub trees: Vec&lt;T&gt;,
+}
+<span class="boring">}</span></code></pre></pre>
+<hr />
+<h3 id="stage-4"><a class="header" href="#stage-4">Stage 4</a></h3>
+<p>At this point, we have a comprehensive trace (table) with <code>trace_len</code> rows (approximately $2^{22}$ rows) containing:</p>
+<ul>
+<li>Setup columns (from the compiled circuit).</li>
+<li>Witness &amp; memory columns (from witness evaluation).</li>
+<li>Lookup related columns (from stage 2).</li>
+<li>Quotient columns (from stage 3).</li>
+</ul>
+<p>Each column represents a polynomial that will eventually be verified using FRI. In stage 4, these columns are combined into a single DEEP polynomial using a random $\alpha$ and evaluated at a random point $z$. This evaluation verifies the relationships, particularly how the quotient was computed.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>    let mut it = transcript_challenges.array_chunks::&lt;4&gt;();
+    // random
+    let z = Mersenne31Quartic::from_coeffs_in_base(
+        &amp;it.next()
+            .unwrap()
+            .map(|el| Mersenne31Field::from_nonreduced_u32(el)),
+    );
+
+    // random
+    let deep_poly_alpha = Mersenne31Quartic::from_coeffs_in_base(
+        &amp;it.next()
+            .unwrap()
+            .map(|el| Mersenne31Field::from_nonreduced_u32(el)),
+    );
+<span class="boring">}</span></code></pre></pre>
+<p>After evaluating all columns at point $z$, the final DEEP polynomial is formed by combining the evaluations with powers of deep_poly_alpha:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>    // alphas is 1, alpha, alpha^2, alpha^3, ...
+    let alphas =
+        materialize_powers_serial_starting_with_one::&lt;_, Global&gt;(deep_poly_alpha, total_num_evals);
+<span class="boring">}</span></code></pre></pre>
+<p>Additionally, two important techniques are applied:</p>
+<ul>
+<li>The computed polynomial is represented as (deep(x) - deep(z))/(z-x).</li>
+<li>A portion of the deep polynomial is also computed over $x * \omega$, which is used for "peek-ahead" comparisons between consecutive rows.</li>
+</ul>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// deep(z) - constant
+let mut contribution_at_z = adjustment_at_z;
+// deep(x)
+contribution_at_z.sub_assign(&amp;deep_poly_accumulator);
+// x-z
+contribution_at_z.mul_assign(&amp;divisor);
+<span class="boring">}</span></code></pre></pre>
+<p>Once the DEEP polynomial trace is complete, its LDE extension and corresponding trees are generated:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub struct FourthStageOutput&lt;const N: usize, A: GoodAllocator, T: MerkleTreeConstructor&gt; {
+    pub values_at_z: Vec&lt;Mersenne31Quartic&gt;,
+    pub ldes: Vec&lt;CosetBoundColumnMajorTracePart&lt;A&gt;&gt;,
+    pub trees: Vec&lt;T&gt;,
+    // gpu comparison test needs z and alpha
+    pub z: Mersenne31Quartic,
+    pub alpha: Mersenne31Quartic,
+}
+<span class="boring">}</span></code></pre></pre>
+<hr />
+<h3 id="stage-5"><a class="header" href="#stage-5">Stage 5</a></h3>
+<p>Stage 5 completes the process by performing FRI verification of the DEEP polynomial computed in stage 4.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn prover_stage_5&lt;const N: usize, A: GoodAllocator, T: MerkleTreeConstructor&gt;(
+    seed: &amp;mut Seed,
+    stage_4_output: &amp;FourthStageOutput&lt;N, A, T&gt;,
+    twiddles: &amp;Twiddles&lt;Mersenne31Complex, A&gt;,
+    lde_factor: usize,
+    folding_description: &amp;FoldingDescription,
+    num_queries: usize,
+    worker: &amp;Worker,
+) -&gt; FifthStageOutput&lt;A, T&gt;
+<span class="boring">}</span></code></pre></pre>
+<p>A folding description outlines how the polynomial is recursively folded to a smaller size. An example folding description includes:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>FoldingDescription {
+    initial_degree: 22,
+    folding_sequence: &amp;[4, 4, 3, 3, 3],
+    total_caps_size_log2: 7,
+    final_monomial_degree_log2: 5,
+}, // 22
+<span class="boring">}</span></code></pre></pre>
+<p>Finally, the coefficients of the fully folded polynomial are computed:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>    let monomial_coefficients = { ... } 
+<span class="boring">}</span></code></pre></pre>
+<p>The output of stage 5 encapsulates several details including:</p>
+<ul>
+<li>FRI oracles representing traces after each folding step.</li>
+<li>The final polynomial in monomial form.</li>
+<li>Information on whether leaves were exposed from the last FRI step.</li>
+<li>And more, as shown below:</li>
+</ul>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub struct FifthStageOutput&lt;A: GoodAllocator, T: MerkleTreeConstructor&gt; {
+    /// List of FRI folding steps with details.
+    pub fri_oracles: Vec&lt;FRIStep&lt;A, T&gt;&gt;,
+    /// Final set of monomials for the DEEP FRI polynomial after all the foldings.
+    pub final_monomials: Vec&lt;Mersenne31Quartic&gt;,
+    /// If true - then last step has put the leaves in last_fri_step_plain_leaf_values.
+    pub expose_all_leafs_at_last_step_instead: bool,
+    /// Might (if expose_all above is true) contain all the leaves from the final folding step.
+    /// If leaves are not here - then we simply created a tree with caps out of them and put it inside
+    /// fri_oracles.
+    // It is a vec of vec, as we store leaves for multiple cosets/domains.
+    pub last_fri_step_plain_leaf_values: Vec&lt;Vec&lt;Mersenne31Quartic&gt;&gt;,
+}
+<span class="boring">}</span></code></pre></pre>
+<hr />
+<h3 id="compute-fri-queries"><a class="header" href="#compute-fri-queries">Compute FRI Queries</a></h3>
+<p>As a final step, a series of FRI queries are generated to verify that the folding was performed correctly. Each query collects leaves from all relevant columns, which allows the verifier to reconstruct the DEEP polynomial at specific points.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let mut queries = Vec::with_capacity(num_queries);
+for _i in 0..num_queries {
+    // random
+    let query_index = assemble_query_index(query_index_bits as usize, &amp;mut bit_source);
+    //...
+    // query set with leaves from all the columns
+    let query_set = QuerySet {
+        witness_query,
+        memory_query,
+        setup_query,
+        stage_2_query,
+        quotient_query,
+        initial_fri_query,
+        // And intermediate FRI leaves from folding.
+        intermediate_fri_queries,
+    };
+<span class="boring">}</span></code></pre></pre>
+<p>All pieces are then combined into a single <code>Proof</code> struct, which is returned to the caller:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub struct Proof {
+    pub external_values: ExternalValues,
+    pub public_inputs: Vec&lt;Mersenne31Field&gt;,
+    pub witness_tree_caps: Vec&lt;MerkleTreeCapVarLength&gt;,
+    pub memory_tree_caps: Vec&lt;MerkleTreeCapVarLength&gt;,
+    pub setup_tree_caps: Vec&lt;MerkleTreeCapVarLength&gt;,
+    pub stage_2_tree_caps: Vec&lt;MerkleTreeCapVarLength&gt;,
+    pub memory_grand_product_accumulator: Mersenne31Quartic,
+    pub delegation_argument_accumulator: Option&lt;Mersenne31Quartic&gt;,
+    pub quotient_tree_caps: Vec&lt;MerkleTreeCapVarLength&gt;,
+    pub evaluations_at_random_points: Vec&lt;Mersenne31Quartic&gt;,
+    pub deep_poly_caps: Vec&lt;MerkleTreeCapVarLength&gt;,
+    pub intermediate_fri_oracle_caps: Vec&lt;Vec&lt;MerkleTreeCapVarLength&gt;&gt;,
+    pub last_fri_step_plain_leaf_values: Vec&lt;Vec&lt;Mersenne31Quartic&gt;&gt;,
+    pub final_monomial_form: Vec&lt;Mersenne31Quartic&gt;,
+    pub queries: Vec&lt;QuerySet&gt;,
+    pub pow_nonce: u64,
+    pub circuit_sequence: u16,
+    pub delegation_type: u16,
+}
+<span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="verifier-walkthrough"><a class="header" href="#verifier-walkthrough">Verifier Walkthrough</a></h1>
+<p>This guide explains the verification process, detailing how we obtain and use proof and FRI query data.</p>
+<p>Note: that we have a separate standalone code for each verifier - all coming from the common "verifier" directory.</p>
+<p>Morever all the quotient code is auto-generated from the circruit description.</p>
+<h2 id="inputs"><a class="header" href="#inputs">Inputs</a></h2>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let skeleton = ProofSkeletonInstance::fill::&lt;I&gt;(...);
+let queries = QueryValuesInstance::fill_array::(...)
+<span class="boring">}</span></code></pre></pre>
+<p>We start verification by obtaining the proof (the "skeleton") and FRI query data. These functions read values using <code>read_crs</code> (see <a href="code_walkthrough/../basics/non_determinism.html">passing_data</a>). Note that these functions allow the verifier to be runnable on RISCV as well (see <a href="code_walkthrough/../basics/recursion.html">recursion</a>).</p>
+<h3 id="proof-skeleton"><a class="header" href="#proof-skeleton">Proof Skeleton</a></h3>
+<p>This contains the main proof information, including public inputs, Merkle tree roots (caps), accumulators, openings, coefficients, etc.</p>
+<h3 id="query-values"><a class="header" href="#query-values">Query Values</a></h3>
+<p>This consists of a list of FRI queries paired with their corresponding leaves.</p>
+<h3 id="traces-and-types"><a class="header" href="#traces-and-types">Traces and Types</a></h3>
+<p>Think of the "trace" as one large table with many columns. In practice, we split it into several subtraces.</p>
+<h4 id="setup"><a class="header" href="#setup">Setup</a></h4>
+<p>The setup holds constants that remain the same regardless of circuit type. For example, "timestamp" almost acts like a "row index."</p>
+<h4 id="witness"><a class="header" href="#witness">Witness</a></h4>
+<p>This is where most of the circuit variables reside. Allocating a new circuit variable creates a new column.</p>
+<h4 id="memory"><a class="header" href="#memory">Memory</a></h4>
+<p>Memory columns record memory reads and writes. They track which slots were accessed (read or written) in a given step. We impose a strict upper limit (about 3) of accesses per step. Reading or writing to registers is treated as memory access.</p>
+<h4 id="stage2"><a class="header" href="#stage2">Stage2</a></h4>
+<p>This subtrace handles helper tasks. (TODO)</p>
+<h4 id="quotient"><a class="header" href="#quotient">Quotient</a></h4>
+<p>This is one polynomial that checks all conditions (see <a href="code_walkthrough/../advanced/quotient.html">quotient</a> for more details).</p>
+<h2 id="randomness"><a class="header" href="#randomness">Randomness</a></h2>
+<p>FRI security depends on deterministic randomness (refer to Fiat-Shamir for background). We modify seeds repeatedly during verification, and use these seeds to generate various parameters (alpha, beta, gamma, challenges, etc.).</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let mut seed = Blake2sTranscript::commit_initial_using_hasher(
+    blake2s_u32::DelegatedBlake2sState,
+    skeleton.transcript_elements_before_stage2(),
+);
+let challenges = Transcript::draw_randomness_using_hasher(seed);
+let lookup_argument_gamma = Mersenne31Quartic::from(challenges.next());
+...
+// Update seed again
+Blake2sTranscript::commit_with_seed_using_hasher(
+    &amp;mut transcript_hasher,
+    &amp;mut seed,
+    skeleton.transcript_elements_stage2_to_stage3(),
+);
+let quotient_alpha = Mersenne31Quartic::from(challenges.next());
+...
+<span class="boring">}</span></code></pre></pre>
+<h2 id="pow"><a class="header" href="#pow">PoW</a></h2>
+<p>For extra security, the prover must provide PoW. After verifying PoW, we use the seed to generate FRI query indexes.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Now we can verify PoW
+Blake2sTranscript::verify_pow_using_hasher(
+    &amp;mut transcript_hasher,
+    &amp;mut seed,
+    skeleton.pow_nonce,
+    POW_BITS as u32,
+);
+...
+let indexes_bits = Transcript::draw_randomness_using_hasher(&amp;mut transcript_hasher, &amp;mut seed);
+<span class="boring">}</span></code></pre></pre>
+<h2 id="quotient-opening"><a class="header" href="#quotient-opening">Quotient Opening</a></h2>
+<p>Next, we unpack the values from different column polynomials at a randomly chosen point $z$.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let (setup, rest) = skeleton.openings_at_z.split_at(NUM_SETUP_OPENINGS);
+let (witness, rest) = rest.split_at(NUM_WITNESS_OPENINGS);
+...
+<span class="boring">}</span></code></pre></pre>
+<p>We then calculate the divisors. These divisors represent points where specific subgroups of polynomials must be 0:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let divisors = [
+    everywhere_except_last,
+    everywhere_except_last_two_rows,
+    first_row,
+    one_before_last_row,
+    last_row,
+    last_row_and_zero,
+];
+<span class="boring">}</span></code></pre></pre>
+<p>This showcases the six common patterns observed in our polynomials. We follow this up by calling the <code>evaluate_quotient</code> method:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let quotient_opening = skeleton.openings_at_z[-1];
+let quotient_recomputed_value = evaluate_quotient(...);
+assert_eq!(
+    quotient_recomputed_value, quotient_opening,
+    "quotient evaluation diverged"
+);
+<span class="boring">}</span></code></pre></pre>
+<p><code>evaluate_quotient</code> is auto-generated based on the compiled circuit. Its goal is to compute the special quotient polynomial (see quotient.md), applying all circuit-specific computations. For example, if a circuit enforces that the 5th column contains only booleans (true for all rows except the last), the method adds
+$witness[5] * (witness[5] - 1) / divisors[0]$
+to the quotient. Similar logic applies for other constraints.</p>
+<p>This check confirms that the quotient polynomial at the point $z$ equals the computed combination of other polynomials, verifying that the original polynomials are 0 where required.</p>
+<h3 id="public-inputs-1"><a class="header" href="#public-inputs-1">Public Inputs</a></h3>
+<p>Among the parameters passed to <code>evaluate_quotient</code> are public inputs. Typically, the method creates a polynomial that compares a public input with a witness column value, ensuring that the polynomial vanishes (equals 0) on the first row.</p>
+<p>Below is an example where the first public input is set to match column 102 of the witness:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let first_row_contribution = {
+    ...
+    {
+        accumulated_contribution.mul_assign(&amp;quotient_alpha);
+        let contribution = {
+            let individual_term = {
+                let mut individual_term = *(witness.get_unchecked(102usize));
+                let t = public_inputs[0usize];
+                individual_term.sub_assign_base(&amp;t);
+                individual_term
+            };
+            individual_term
+        };
+        accumulated_contribution.add_assign(&amp;contribution);
+    }
+    ...
+    let divisor = divisors[2usize];
+    accumulated_contribution.mul_assign(&amp;divisor);
+    accumulated_contribution
+}
+<span class="boring">}</span></code></pre></pre>
+<p>In the final part, we divide by <code>divisors[2]</code> (the first row divisor, $1 / (x - omega^0)$ ). The final quotient then combines contributions using a random $\beta$:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let mut quotient = every_row_except_last_contribution;
+quotient.mul_assign(&amp;quotient_beta);
+quotient.add_assign(&amp;every_row_except_two_last_contribution);
+quotient.mul_assign(&amp;quotient_beta);
+quotient.add_assign(&amp;first_row_contribution);
+...
+<span class="boring">}</span></code></pre></pre>
+<h2 id="fri-verification"><a class="header" href="#fri-verification">Fri Verification</a></h2>
+<p>After confirming the quotient polynomial evaluation at $z$, we prove two additional things:</p>
+<ol>
+<li>All the polynomials are valid (of a fixed maximum degree).</li>
+<li>Their evaluation at the point $z$ is correct.</li>
+</ol>
+<p>Instead of checking each polynomial separately, we combine them into a single polynomial using a random parameter $\alpha$. The combined polynomial looks roughly like:</p>
+<p>$deep = f_{setup_0} + \alpha<em>f_{setup_1} + ... + \alpha^5</em>f_{witness_0} + \ldots $</p>
+<p>This polynomial also includes the quotient polynomial, so if we can prove that $deep$ has the correct degree, the original polynomials are all valid.</p>
+<h3 id="checking-the-value-at-z"><a class="header" href="#checking-the-value-at-z">Checking the Value at $z$</a></h3>
+<p>To verify the computed $deep(z)$, we use a clever trick. We define a different polynomial:</p>
+<p>$deep_{fri}(x) = (deep(z) - deep(x)) / (z - x)$.</p>
+<p>If $deep(z)$ is correctly computed, then plugging $x = z$ results in 0, meaning $deep_{fri}(x)$ should be divisible by $(x-z)$. Proving that $deep_{fri}(x)$ is a valid polynomial confirms the correctness of $deep(z)$ and that all other column functions are polynomials, including the quotient.</p>
+<h3 id="precomputations"><a class="header" href="#precomputations">Precomputations</a></h3>
+<p>We start with some precomputations:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let (precompute_with_evals_at_z, precompute_with_evals_at_z_omega, powers_of_deep_quotient_challenge) = 
+                precompute_for_consistency_checks(
+                    &amp;skeleton,
+                    &amp;deep_poly_alpha
+                )
+<span class="boring">}</span></code></pre></pre>
+<p>Then, we verify each FRI query:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>for query_round in 0..NUM_QUERIES {
+<span class="boring">}</span></code></pre></pre>
+<h3 id="fri-query-handling"><a class="header" href="#fri-query-handling">Fri Query Handling</a></h3>
+<p>The first step is to verify that each query targets the correct index. This is crucial because FRI leaves must be determined based on the current seed to uphold the Fiat-Shamir assumption.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let query_index: u32 =
+    assemble_query_index(BITS_FOR_QUERY_INDEX, &amp;mut bit_iterator) as u32;
+
+// Assert that our query is at the proper index
+assert_eq!(query.query_index, query_index);
+<span class="boring">}</span></code></pre></pre>
+<p>Some points are evaluated at $z$, while others at $z * \omega$—the latter is needed for constraints that require a "step ahead". We compute the expected value as follows:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let expected_value = accumulate_over_row_for_consistency_check(...);
+<span class="boring">}</span></code></pre></pre>
+<p>Here, the $deep$ polynomial is a combination of various column polynomials. Using <code>precompute_with_evals_at_z</code> and <code>precompute_with_evals_at_z_omega</code>, we compute $deep(z)$. The <code>query_index</code> then lets us access $deep(\omega^{queryIndex})$ (referred to as <code>evaluation_point</code>). This value is used in the FRI folding process, where in each step the degree of the deep polynomial is reduced and the expected value is updated (more details in <a href="code_walkthrough/fri_query.html">fri_query</a>).</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>for (step, folding_degree_log_2) in FRI_FOLDING_SCHEDULE.iter().enumerate() {
+    ...
+    fri_fold_by_log_n::&lt;N&gt;(
+        &amp;mut expected_value,
+        &amp;mut evaluation_point,
+        &amp;mut domain_size_log_2,
+        &amp;mut domain_index,
+        &amp;mut tree_index,
+        &amp;mut offset_inv,
+        leaf_projection,
+        challenges,
+        &amp;SHARED_FACTORS_FOR_FOLDING,
+    );
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="monomial-form"><a class="header" href="#monomial-form">Monomial Form</a></h3>
+<p>After several folding steps, the $deep$ polynomial reduces to a low degree. At this stage, the proof can present its monomial form (parameters $a_0, a_1, a_2, ...$ for the polynomial $a_0 + a_1 *x + a_2 *x^2 + \ldots$. ). The final step is to evaluate this polynomial at the current <code>evaluation_point</code> and ensure that it matches <code>expected_value</code>. (Note: Both the evaluation point and expected value change during folding; see <a href="code_walkthrough/../basics/fri_query.html">fri_query</a> for details.)</p>
+<h2 id="summary-1"><a class="header" href="#summary-1">Summary</a></h2>
+<p>Below is a quick summary of the verifier's process:</p>
+<ul>
+<li>Load the proof and queries.</li>
+<li>Compute necessary seeds and random parameters (alpha, beta, query indexes) based on the proof.</li>
+<li>Obtain evaluations of all polynomials at a random point $z$, and verify that the quotient polynomial matches via <code>evaluate_quotient</code>.</li>
+<li>Combine all polynomials into the deep polynomial.</li>
+<li>Create the deep-fri polynomial by incorporating the condition that deep polynomial evaluation at $z$ divides $(x-z)$.</li>
+<li>Finally, use FRI to prove that the deep-fri polynomial is of a specific maximum degree.</li>
+</ul>
+<p>This overall process confirms that the prover supplied a valid trace table where all constraints are satisfied as per the divisors' requirements.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+    </div>
+    </body>
+</html>

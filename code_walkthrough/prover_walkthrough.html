@@ -1,0 +1,540 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Prover - The book of Boojum 2.0</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../index.html"><strong aria-hidden="true">1.</strong> Intro</a></li><li class="chapter-item expanded "><a href="../basics/index.html"><strong aria-hidden="true">2.</strong> Basics</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../basics/non_determinism.html"><strong aria-hidden="true">2.1.</strong> non_determinism</a></li><li class="chapter-item expanded "><a href="../basics/delegations.html"><strong aria-hidden="true">2.2.</strong> delegations</a></li><li class="chapter-item expanded "><a href="../basics/recursion.html"><strong aria-hidden="true">2.3.</strong> recursion</a></li><li class="chapter-item expanded "><a href="../basics/field.html"><strong aria-hidden="true">2.4.</strong> field</a></li><li class="chapter-item expanded "><a href="../basics/polynomials.html"><strong aria-hidden="true">2.5.</strong> polynomials</a></li><li class="chapter-item expanded "><a href="../basics/trace.html"><strong aria-hidden="true">2.6.</strong> trace</a></li><li class="chapter-item expanded "><a href="../basics/constraint.html"><strong aria-hidden="true">2.7.</strong> constraint</a></li><li class="chapter-item expanded "><a href="../basics/memory.html"><strong aria-hidden="true">2.8.</strong> memory</a></li><li class="chapter-item expanded "><a href="../basics/single_column_proof.html"><strong aria-hidden="true">2.9.</strong> single_column_proof</a></li></ol></li><li class="chapter-item expanded "><a href="../advanced/index.html"><strong aria-hidden="true">3.</strong> Advanced</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../advanced/columns_memory.html"><strong aria-hidden="true">3.1.</strong> columns_memory</a></li><li class="chapter-item expanded "><a href="../advanced/columns_setup.html"><strong aria-hidden="true">3.2.</strong> columns_setup</a></li><li class="chapter-item expanded "><a href="../advanced/lookups_and_rangechecks.html"><strong aria-hidden="true">3.3.</strong> lookups_and_rangechecks</a></li><li class="chapter-item expanded "><a href="../advanced/fri_query.html"><strong aria-hidden="true">3.4.</strong> fri_query</a></li><li class="chapter-item expanded "><a href="../advanced/quotient.html"><strong aria-hidden="true">3.5.</strong> quotient</a></li></ol></li><li class="chapter-item expanded "><a href="../code_walkthrough/index.html"><strong aria-hidden="true">4.</strong> Code Walkthough</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../code_walkthrough/prover_walkthrough.html" class="active"><strong aria-hidden="true">4.1.</strong> Prover</a></li><li class="chapter-item expanded "><a href="../code_walkthrough/verifier_walkthrough.html"><strong aria-hidden="true">4.2.</strong> Verifier</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The book of Boojum 2.0</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="prover-walkthrough"><a class="header" href="#prover-walkthrough">Prover Walkthrough</a></h1>
+<p>The goal of this article is to explain how the boojum prover works from end to end. The content uses simplified code snippets with function names intact, while hiding some parameters for readability.</p>
+<hr />
+<p>Whole journey starts here:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn prove_image_execution(
+    bytecode: &amp;[u32],
+    non_determinism: ND,
+    risc_v_circuit_precomputations: &amp;MainCircuitPrecomputations&lt;A&gt;,
+) -&gt; (Vec&lt;Proof&gt;, Vec&lt;FinalRegisterValue&gt;)
+<span class="boring">}</span></code></pre></pre>
+<p>We pass the bytecode of the program, non-determinism (a.k.a. IO; see <a href="../basics/non_determinism.html">how io works</a>), and the compiled circuit with some precomputed static data. The function returns a list of proofs because the program could run long enough to span multiple circuits. If there are too many proofs, recursion can be applied to combine them (see <a href="../basics/recursion.html">recursion</a> for more info).</p>
+<hr />
+<p>The process begins with executing the program and writing down state changes into the witness:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>    let (final_pc, final_register_values, main_circuits_witness, delegation_circuits_witness) =
+        run_and_split_in_default_configuration::&lt;ND, C&gt;(
+            max_cycles_to_run,
+            bytecode,
+            &amp;mut non_determinism,
+            worker,
+        );
+<span class="boring">}</span></code></pre></pre>
+<p>Here, <code>main_circuits_witness</code> holds a vector of <code>RiscVCircuitWitnessChunk</code>, each representing what happened during a single circuit run (typically around $2^{22}$ steps).</p>
+<p>Next, memory accesses are processed by constructing a tree. The resulting final hash will be used to generate a "commitment":</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>for circtuit in main_circuits_witness {
+    let (caps, aux_data) = commit_memory_tree_for_riscv_circuit(..);
+    memory_trees.push(caps);
+}
+<span class="boring">}</span></code></pre></pre>
+<p>Together with the setup columns’ hash, these are used to generate initial seeds:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let memory_challenges_seed = fs_transform_for_memory_and_delegation_arguments(
+    &amp;setup_caps,
+    &amp;final_register_values,
+    &amp;memory_trees,
+    &amp;delegation_memory_trees,
+);
+let external_challenges =
+    ExternalChallenges::draw_from_transcript_seed(memory_challenges_seed, true);
+<span class="boring">}</span></code></pre></pre>
+<p>These external challenges add randomness inside the prover to improve security.</p>
+<hr />
+<h2 id="evaluate-witness"><a class="header" href="#evaluate-witness">Evaluate Witness</a></h2>
+<p>The next step is to prepare a trace (table) with both witness and memory columns. This table is a matrix where each row represents a single execution step. Data from the circuit is organized into readable columns.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let witness_trace = evaluate_witness(
+    &amp;risc_v_circuit_precomputations.compiled_circuit,
+    cycles_per_circuit,
+    &amp;oracle,
+    &amp;witness_chunk
+        .shuffle_ram_inits_and_teardowns
+        .lazy_init_values,
+    &amp;witness_chunk
+        .shuffle_ram_inits_and_teardowns
+        .lazy_teardown_values_and_timestamps,
+    &amp;risc_v_circuit_precomputations.table_driver,
+    circuit_sequence,
+    worker,
+    A::default(),
+);
+<span class="boring">}</span></code></pre></pre>
+<p>Internally, the evaluation function processes each row (often in parallel threads) and works in roughly three stages:</p>
+<ul>
+<li><strong>Static work:</strong> Filling in columns with fixed values (e.g., memory access, oracle answers) via <code>evaluate_witness_inner_static_work</code>.</li>
+<li><strong>Dynamic work:</strong> Computing outputs based on other variable values using custom functions in <code>evaluate_witness_inner_witness_generation_functions_work</code>.</li>
+<li><strong>Final derived columns:</strong> These are computed for lookups, range checks, etc., using <code>count_multiplicities</code>.</li>
+</ul>
+<p>After completing this stage, the witness and memory columns are fully populated, and the process moves on to stage 1.</p>
+<hr />
+<h2 id="prove"><a class="header" href="#prove">Prove</a></h2>
+<p>The proving phase begins with a function that accepts numerous arguments; however, the key parameters are the compiled circuit (which contains the setup columns) and the witness evaluation data (which includes the witness and memory columns):</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn prove&lt;const N: usize, A: GoodAllocator&gt;(
+    compiled_circuit: &amp;CompiledCircuitArtifact&lt;Mersenne31Field&gt;,
+    public_inputs: &amp;[Mersenne31Field],
+    external_values: &amp;ExternalValues,
+    witness_eval_data: WitnessEvaluationData&lt;N, A&gt;,
+    setup_precomputations: &amp;SetupPrecomputations&lt;N, A, DefaultTreeConstructor&gt;,
+    precomputations: &amp;Twiddles&lt;Mersenne31Complex, A&gt;,
+    lde_precomputations: &amp;LdePrecomputations&lt;A&gt;,
+    circuit_sequence: usize,
+    delegation_processing_type: Option&lt;u16&gt;,
+    lde_factor: usize,
+    _tree_cap_size: usize,
+    num_queries: usize,
+    pow_bits: u32,
+    worker: &amp;Worker,
+) -&gt; (ProverData&lt;N, A, DefaultTreeConstructor&gt;, Proof) {
+<span class="boring">}</span></code></pre></pre>
+<p>The first action is to collect <code>transcript</code> data, which helps initialize an additional randomness seed:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>    let mut transcript_input = vec![];
+    transcript_input.push(circuit_sequence as u32);
+    transcrpit_input.push(...);
+<span class="boring">}</span></code></pre></pre>
+<p>Before completing the transcript, stage 1 is performed.</p>
+<hr />
+<h3 id="stage-1"><a class="header" href="#stage-1">Stage 1</a></h3>
+<p>Stage 1’s goal is to create LDEs (Low Degree Extensions) for the main memory and witness trace, and then build trees over these LDEs. For more details on LDE, see <a href="../basics/field.html">field</a>.</p>
+<p><code>prover_stage_1</code> creates an LDE for all elements of the trace and splits the columns into separate Merkle trees for memory and witness data.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub struct FirstStageOutput&lt;const N: usize, A: GoodAllocator, T: MerkleTreeConstructor&gt; {
+    pub ldes: Vec&lt;CosetBoundTracePart&lt;N, A&gt;&gt;,
+    pub num_witness_columns: usize,
+    pub witness_tree: Vec&lt;T&gt;,
+    pub memory_tree: Vec&lt;T&gt;,
+}
+<span class="boring">}</span></code></pre></pre>
+<p>When stage 1 completes, the tree hashes are added to the transcript so future random variables depend on the LDE values.</p>
+<hr />
+<h3 id="stage-2"><a class="header" href="#stage-2">Stage 2</a></h3>
+<p>The objective of stage 2 is to compute additional columns, known as stage2 columns (see <code>LookupAndMemoryArgumentLayout</code> for the full list). These columns include polynomials for lookups, range checks, and memory access.</p>
+<p>In stage 2, the process is repeated over existing columns to identify memory and range checks and to populate the new columns. Many of these have nominators and denominators—for example, each memory read adds a nominator and each write adds a denominator. The overall sum should equal 1.</p>
+<p>After the <code>stage2_trace</code> is fully constructed, an LDE and corresponding subtrees are computed for these new columns. The complete data is packaged into:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub struct SecondStageOutput&lt;const N: usize, A: GoodAllocator, T: MerkleTreeConstructor&gt; {
+    // LDEs of second stage table, that contains different contributions, accumulators etc.
+    pub ldes: Vec&lt;CosetBoundTracePart&lt;N, A&gt;&gt;,
+    // Trees based off the LDEs columns.
+    pub trees: Vec&lt;T&gt;,
+    // Challenges used for the linearization
+    pub lookup_argument_linearization_challenges:
+        [Mersenne31Quartic; NUM_LOOKUP_ARGUMENT_KEY_PARTS - 1],
+    // gamma used for the contributions
+    pub lookup_argument_gamma: Mersenne31Quartic,
+    // grand product of all the memory accesses
+    pub grand_product_accumulator: Mersenne31Quartic,
+    // sum of all the delegations &amp; processed ones.
+    pub sum_over_delegation_poly: Mersenne31Quartic,
+}
+<span class="boring">}</span></code></pre></pre>
+<hr />
+<h3 id="stage-3"><a class="header" href="#stage-3">Stage 3</a></h3>
+<p>Stage 3 involves computing the quotient polynomial, which combines all constraints from earlier stages. For details on the math, see <a href="../advanced/quotient.html">What is quotient</a>. Here, a random seed is used to generate the parameters $\alpha$ and $\beta$, then the quotient polynomial is created. The output is a trace with four columns, accompanied by its LDE and trees.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub struct ThirdStageOutput&lt;const N: usize, A: GoodAllocator, T: MerkleTreeConstructor&gt; {
+    pub quotient_alpha: Mersenne31Quartic,
+    pub quotient_beta: Mersenne31Quartic,
+    pub ldes: Vec&lt;CosetBoundTracePart&lt;N, A&gt;&gt;,
+    pub trees: Vec&lt;T&gt;,
+}
+<span class="boring">}</span></code></pre></pre>
+<hr />
+<h3 id="stage-4"><a class="header" href="#stage-4">Stage 4</a></h3>
+<p>At this point, we have a comprehensive trace (table) with <code>trace_len</code> rows (approximately $2^{22}$ rows) containing:</p>
+<ul>
+<li>Setup columns (from the compiled circuit).</li>
+<li>Witness &amp; memory columns (from witness evaluation).</li>
+<li>Lookup related columns (from stage 2).</li>
+<li>Quotient columns (from stage 3).</li>
+</ul>
+<p>Each column represents a polynomial that will eventually be verified using FRI. In stage 4, these columns are combined into a single DEEP polynomial using a random $\alpha$ and evaluated at a random point $z$. This evaluation verifies the relationships, particularly how the quotient was computed.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>    let mut it = transcript_challenges.array_chunks::&lt;4&gt;();
+    // random
+    let z = Mersenne31Quartic::from_coeffs_in_base(
+        &amp;it.next()
+            .unwrap()
+            .map(|el| Mersenne31Field::from_nonreduced_u32(el)),
+    );
+
+    // random
+    let deep_poly_alpha = Mersenne31Quartic::from_coeffs_in_base(
+        &amp;it.next()
+            .unwrap()
+            .map(|el| Mersenne31Field::from_nonreduced_u32(el)),
+    );
+<span class="boring">}</span></code></pre></pre>
+<p>After evaluating all columns at point $z$, the final DEEP polynomial is formed by combining the evaluations with powers of deep_poly_alpha:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>    // alphas is 1, alpha, alpha^2, alpha^3, ...
+    let alphas =
+        materialize_powers_serial_starting_with_one::&lt;_, Global&gt;(deep_poly_alpha, total_num_evals);
+<span class="boring">}</span></code></pre></pre>
+<p>Additionally, two important techniques are applied:</p>
+<ul>
+<li>The computed polynomial is represented as (deep(x) - deep(z))/(z-x).</li>
+<li>A portion of the deep polynomial is also computed over $x * \omega$, which is used for "peek-ahead" comparisons between consecutive rows.</li>
+</ul>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// deep(z) - constant
+let mut contribution_at_z = adjustment_at_z;
+// deep(x)
+contribution_at_z.sub_assign(&amp;deep_poly_accumulator);
+// x-z
+contribution_at_z.mul_assign(&amp;divisor);
+<span class="boring">}</span></code></pre></pre>
+<p>Once the DEEP polynomial trace is complete, its LDE extension and corresponding trees are generated:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub struct FourthStageOutput&lt;const N: usize, A: GoodAllocator, T: MerkleTreeConstructor&gt; {
+    pub values_at_z: Vec&lt;Mersenne31Quartic&gt;,
+    pub ldes: Vec&lt;CosetBoundColumnMajorTracePart&lt;A&gt;&gt;,
+    pub trees: Vec&lt;T&gt;,
+    // gpu comparison test needs z and alpha
+    pub z: Mersenne31Quartic,
+    pub alpha: Mersenne31Quartic,
+}
+<span class="boring">}</span></code></pre></pre>
+<hr />
+<h3 id="stage-5"><a class="header" href="#stage-5">Stage 5</a></h3>
+<p>Stage 5 completes the process by performing FRI verification of the DEEP polynomial computed in stage 4.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn prover_stage_5&lt;const N: usize, A: GoodAllocator, T: MerkleTreeConstructor&gt;(
+    seed: &amp;mut Seed,
+    stage_4_output: &amp;FourthStageOutput&lt;N, A, T&gt;,
+    twiddles: &amp;Twiddles&lt;Mersenne31Complex, A&gt;,
+    lde_factor: usize,
+    folding_description: &amp;FoldingDescription,
+    num_queries: usize,
+    worker: &amp;Worker,
+) -&gt; FifthStageOutput&lt;A, T&gt;
+<span class="boring">}</span></code></pre></pre>
+<p>A folding description outlines how the polynomial is recursively folded to a smaller size. An example folding description includes:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>FoldingDescription {
+    initial_degree: 22,
+    folding_sequence: &amp;[4, 4, 3, 3, 3],
+    total_caps_size_log2: 7,
+    final_monomial_degree_log2: 5,
+}, // 22
+<span class="boring">}</span></code></pre></pre>
+<p>Finally, the coefficients of the fully folded polynomial are computed:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>    let monomial_coefficients = { ... } 
+<span class="boring">}</span></code></pre></pre>
+<p>The output of stage 5 encapsulates several details including:</p>
+<ul>
+<li>FRI oracles representing traces after each folding step.</li>
+<li>The final polynomial in monomial form.</li>
+<li>Information on whether leaves were exposed from the last FRI step.</li>
+<li>And more, as shown below:</li>
+</ul>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub struct FifthStageOutput&lt;A: GoodAllocator, T: MerkleTreeConstructor&gt; {
+    /// List of FRI folding steps with details.
+    pub fri_oracles: Vec&lt;FRIStep&lt;A, T&gt;&gt;,
+    /// Final set of monomials for the DEEP FRI polynomial after all the foldings.
+    pub final_monomials: Vec&lt;Mersenne31Quartic&gt;,
+    /// If true - then last step has put the leaves in last_fri_step_plain_leaf_values.
+    pub expose_all_leafs_at_last_step_instead: bool,
+    /// Might (if expose_all above is true) contain all the leaves from the final folding step.
+    /// If leaves are not here - then we simply created a tree with caps out of them and put it inside
+    /// fri_oracles.
+    // It is a vec of vec, as we store leaves for multiple cosets/domains.
+    pub last_fri_step_plain_leaf_values: Vec&lt;Vec&lt;Mersenne31Quartic&gt;&gt;,
+}
+<span class="boring">}</span></code></pre></pre>
+<hr />
+<h3 id="compute-fri-queries"><a class="header" href="#compute-fri-queries">Compute FRI Queries</a></h3>
+<p>As a final step, a series of FRI queries are generated to verify that the folding was performed correctly. Each query collects leaves from all relevant columns, which allows the verifier to reconstruct the DEEP polynomial at specific points.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let mut queries = Vec::with_capacity(num_queries);
+for _i in 0..num_queries {
+    // random
+    let query_index = assemble_query_index(query_index_bits as usize, &amp;mut bit_source);
+    //...
+    // query set with leaves from all the columns
+    let query_set = QuerySet {
+        witness_query,
+        memory_query,
+        setup_query,
+        stage_2_query,
+        quotient_query,
+        initial_fri_query,
+        // And intermediate FRI leaves from folding.
+        intermediate_fri_queries,
+    };
+<span class="boring">}</span></code></pre></pre>
+<p>All pieces are then combined into a single <code>Proof</code> struct, which is returned to the caller:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub struct Proof {
+    pub external_values: ExternalValues,
+    pub public_inputs: Vec&lt;Mersenne31Field&gt;,
+    pub witness_tree_caps: Vec&lt;MerkleTreeCapVarLength&gt;,
+    pub memory_tree_caps: Vec&lt;MerkleTreeCapVarLength&gt;,
+    pub setup_tree_caps: Vec&lt;MerkleTreeCapVarLength&gt;,
+    pub stage_2_tree_caps: Vec&lt;MerkleTreeCapVarLength&gt;,
+    pub memory_grand_product_accumulator: Mersenne31Quartic,
+    pub delegation_argument_accumulator: Option&lt;Mersenne31Quartic&gt;,
+    pub quotient_tree_caps: Vec&lt;MerkleTreeCapVarLength&gt;,
+    pub evaluations_at_random_points: Vec&lt;Mersenne31Quartic&gt;,
+    pub deep_poly_caps: Vec&lt;MerkleTreeCapVarLength&gt;,
+    pub intermediate_fri_oracle_caps: Vec&lt;Vec&lt;MerkleTreeCapVarLength&gt;&gt;,
+    pub last_fri_step_plain_leaf_values: Vec&lt;Vec&lt;Mersenne31Quartic&gt;&gt;,
+    pub final_monomial_form: Vec&lt;Mersenne31Quartic&gt;,
+    pub queries: Vec&lt;QuerySet&gt;,
+    pub pow_nonce: u64,
+    pub circuit_sequence: u16,
+    pub delegation_type: u16,
+}
+<span class="boring">}</span></code></pre></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../code_walkthrough/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../code_walkthrough/verifier_walkthrough.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../code_walkthrough/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../code_walkthrough/verifier_walkthrough.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
