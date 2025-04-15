@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" class="light" dir="ltr">
+<html lang="en" class="light sidebar-visible" dir="ltr">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
@@ -7,7 +7,7 @@
 
 
         <!-- Custom HTML head -->
-        
+
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
@@ -30,15 +30,17 @@
 
         <!-- Custom theme stylesheets -->
 
-    </head>
-    <body class="sidebar-visible no-js">
-    <div id="body-container">
+
         <!-- Provide site root to javascript -->
         <script>
             var path_to_root = "../";
             var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
         </script>
-
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
@@ -60,19 +62,16 @@
             var theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
-            var html = document.querySelector('html');
+            const html = document.documentElement;
             html.classList.remove('light')
             html.classList.add(theme);
-            var body = document.querySelector('body');
-            body.classList.remove('no-js')
-            body.classList.add('js');
+            html.classList.add("js");
         </script>
 
         <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            var body = document.querySelector('body');
             var sidebar = null;
             var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
@@ -82,45 +81,25 @@
                 sidebar = 'hidden';
             }
             sidebar_toggle.checked = sidebar === 'visible';
-            body.classList.remove('sidebar-visible');
-            body.classList.add("sidebar-" + sidebar);
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
-            <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../index.html"><strong aria-hidden="true">1.</strong> Intro</a></li><li class="chapter-item expanded "><a href="../basics/index.html"><strong aria-hidden="true">2.</strong> Basics</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../basics/non_determinism.html"><strong aria-hidden="true">2.1.</strong> non_determinism</a></li><li class="chapter-item expanded "><a href="../basics/delegations.html"><strong aria-hidden="true">2.2.</strong> delegations</a></li><li class="chapter-item expanded "><a href="../basics/recursion.html"><strong aria-hidden="true">2.3.</strong> recursion</a></li><li class="chapter-item expanded "><a href="../basics/field.html"><strong aria-hidden="true">2.4.</strong> field</a></li><li class="chapter-item expanded "><a href="../basics/polynomials.html"><strong aria-hidden="true">2.5.</strong> polynomials</a></li><li class="chapter-item expanded "><a href="../basics/trace.html"><strong aria-hidden="true">2.6.</strong> trace</a></li><li class="chapter-item expanded "><a href="../basics/constraint.html"><strong aria-hidden="true">2.7.</strong> constraint</a></li><li class="chapter-item expanded "><a href="../basics/memory.html"><strong aria-hidden="true">2.8.</strong> memory</a></li><li class="chapter-item expanded "><a href="../basics/single_column_proof.html"><strong aria-hidden="true">2.9.</strong> single_column_proof</a></li></ol></li><li class="chapter-item expanded "><a href="../advanced/index.html"><strong aria-hidden="true">3.</strong> Advanced</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../advanced/columns_memory.html"><strong aria-hidden="true">3.1.</strong> columns_memory</a></li><li class="chapter-item expanded "><a href="../advanced/columns_setup.html" class="active"><strong aria-hidden="true">3.2.</strong> columns_setup</a></li><li class="chapter-item expanded "><a href="../advanced/lookups_and_rangechecks.html"><strong aria-hidden="true">3.3.</strong> lookups_and_rangechecks</a></li><li class="chapter-item expanded "><a href="../advanced/fri_query.html"><strong aria-hidden="true">3.4.</strong> fri_query</a></li><li class="chapter-item expanded "><a href="../advanced/quotient.html"><strong aria-hidden="true">3.5.</strong> quotient</a></li></ol></li><li class="chapter-item expanded "><a href="../code_walkthrough/index.html"><strong aria-hidden="true">4.</strong> Code Walkthough</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../code_walkthrough/prover_walkthrough.html"><strong aria-hidden="true">4.1.</strong> Prover</a></li><li class="chapter-item expanded "><a href="../code_walkthrough/verifier_walkthrough.html"><strong aria-hidden="true">4.2.</strong> Verifier</a></li></ol></li></ol>
-            </div>
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <!-- Track and set sidebar scroll position -->
-        <script>
-            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
-            sidebarScrollbox.addEventListener('click', function(e) {
-                if (e.target.tagName === 'A') {
-                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
-                }
-            }, { passive: true });
-            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
-            sessionStorage.removeItem('sidebar-scroll');
-            if (sidebarScrollTop) {
-                // preserve sidebar scroll position when navigating via links within sidebar
-                sidebarScrollbox.scrollTop = sidebarScrollTop;
-            } else {
-                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
-                var activeSection = document.querySelector('#sidebar .active');
-                if (activeSection) {
-                    activeSection.scrollIntoView({ block: 'center' });
-                }
-            }
-        </script>
-
         <div id="page-wrapper" class="page-wrapper">
 
             <div class="page">
-                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
                         <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
@@ -173,7 +152,8 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="setup-columns"><a class="header" href="#setup-columns">Setup Columns</a></h1>
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css">
+<h1 id="setup-columns"><a class="header" href="#setup-columns">Setup Columns</a></h1>
 <p>Setup columns act like constants: their values are established during circuit "compilation" time and remain unchanged during execution.</p>
 <p>Currently, there are three types of setup columns:</p>
 <ul>
@@ -190,7 +170,7 @@
 <p>These columns store all elements from lookup tables. Each set of columns is sized to 4, which is the maximum size for a single lookup table entry (3 columns for data, with the last column used for the lookup table id).</p>
 <p>If the number of lookup entries exceeds the number of rows, additional copies of these columns may be created so that all elements fit.</p>
 <h2 id="range-check"><a class="header" href="#range-check">Range Check</a></h2>
-<p>A single column is used to store every value in the range $0 .. 2^{16}$. We use many u16 checks since u32 values don’t fit our field, and we assume that the highest value in any cell is a u16.</p>
+<p>A single column is used to store every value in the range <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord">0..</span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">16</span></span></span></span></span></span></span></span></span></span></span></span>. We use many u16 checks since u32 values don’t fit our field, and we assume that the highest value in any cell is a u16.</p>
 <p>Because a u16 check only requires one column—and because there’s no need to store an extra column with a table id—it is more efficient to use a single column instead of the four that would be necessary if combined with the generic lookups.</p>
 <h2 id="example-trace-table"><a class="header" href="#example-trace-table">Example Trace Table</a></h2>
 <p>Below is an example trace table. The table includes the timestamp (represented as a single column), a u16 range check, and generic lookups (illustrated by an XOR operation with table_id = 5):</p>
